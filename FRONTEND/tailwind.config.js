@@ -1,6 +1,6 @@
 // tailwind.config.js
 export default {
-    content: ["./src/**/*.{html,js,php}"], // Specify the files Tailwind should scan for classes
+    content: ["./FRONTEND/**/*.{html,js,php}"], // Specify the files Tailwind should scan for classes
     theme: {
       extend: {
         colors: {
