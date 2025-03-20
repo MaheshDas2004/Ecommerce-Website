@@ -8,11 +8,8 @@
 </head>
 <body>
 
-    <div class=" bg-gray-300">
     <?php include 'navbar.php'; ?>
     <?php include 'dashboard.php'; ?>
-    </div>
-
 
 </body>
 </html>

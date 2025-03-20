@@ -6,12 +6,21 @@
   <title>Document</title>
   <link rel="stylesheet" href="./output.css">
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+  @import url('https://fonts.googleapis.com/css2?family=Amarante&family=Anton&family=Creepster&family=Dancing+Script:wght@400..700&family=Marcellus&family=Pacifico&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&family=Rubik+Wet+Paint&display=swap');
+  #t1{
+    font-family: "Marcellus", serif;
+
+    font-style: normal;
+    font-weight: 600;
+  }
+  </style>
 </head>
 <body>
-<header class="w-full bg-white shadow-lg">
+<header class="w-full bg-rose-50 shadow-xl border-0">
     <div class="container-fluid px-2 sm:px-3 md:px-4 py-4 flex justify-between items-center">
         <!-- Logo - moved closer to left edge -->
-        <div class="text-3xl font-bold tracking-wider ml-2 md:ml-4">KAIRA</div>
+        <div id="t1" class="text-3xl font-bold tracking-wider ml-2 md:ml-4">KAIRA</div>
         
         <!-- Mobile menu button - centered hamburger icon in a button -->
         <button class="md:hidden flex items-center justify-center border border-gray-300 rounded p-2 mx-2" id="mobile-menu-button">
