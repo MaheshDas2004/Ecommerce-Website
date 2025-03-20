@@ -50,7 +50,7 @@
                 </svg>
             </div>
             <h1 id="t2" class="text-xl font-bold mb-2">Book An Appointment</h1>
-            <p class="text-gray-500 text-sm">At imperdiet dui accumsan sit amet nulla risus est ultricies quis.</p>
+            <p class="text-gray-500 text-sm">Discover a seamless shopping experience tailored to your needs. Schedule a personalized session with our fashion experts today!</p>
         </div>
 
         <!-- Pick Up In Store -->
@@ -61,7 +61,7 @@
                 </svg>
             </div>
             <h1 class="text-xl font-bold mb-2">Pick Up In Store</h1>
-            <p class="text-gray-500 text-sm">At imperdiet dui accumsan sit amet nulla risus est ultricies quis.</p>
+            <p class="text-gray-500 text-sm">Enjoy the convenience of picking up your curated fashion pieces at your nearest store. Shop effortlessly today!</p>
         </div>
 
         <!-- Special Packaging -->
@@ -72,7 +72,7 @@
                 </svg>
             </div>
             <h1 class="text-xl font-bold mb-2">Special Packaging</h1>
-            <p class="text-gray-500 text-sm">At imperdiet dui accumsan sit amet nulla risus est ultricies quis.</p>
+            <p class="text-gray-500 text-sm">Make your gifts unforgettable with our exclusive packaging options. Perfect for every special occasion!</p>
         </div>
 
         <!-- Free Global Returns -->
@@ -83,7 +83,7 @@
                 </svg>
             </div>
             <h1 class="text-xl font-bold mb-2">Free Global Returns</h1>
-            <p class="text-gray-500 text-sm">At imperdiet dui accumsan sit amet nulla risus est ultricies quis.</p>
+            <p class="text-gray-500 text-sm">Shop with confidence knowing you can return your fashion finds effortlessly, no matter where you are!</p>
         </div>
     </div>
 
@@ -123,7 +123,7 @@
     </div>
 
     
-<div class="bg-white font-serif">
+<div class="bg-white font-serif ">
     <div class="container mx-auto px-4 py-8">
         <!-- Header -->
         <div class="flex justify-between items-center mb-8">
@@ -204,34 +204,43 @@
             
             // Display 4 products starting from startIndex
             for (let i = startIndex; i < startIndex + 4; i++) {
-                const index = i % products.length; // Cycle through products if needed
+                const index = i % products.length;
                 const product = products[index];
                 
                 const productCard = document.createElement('div');
-                productCard.className = 'product-card relative';
+                productCard.className = 'product-card relative group';
                 
-                // Product image and hover options
                 productCard.innerHTML = `
-                    <div class="relative overflow-hidden group">
-                        <img src="${product.image}" alt="${product.name}" class="w-full h-96 object-cover">
+                    <div class="relative overflow-hidden">
+                        <img src="${product.image}" alt="${product.name}" class="w-full h-96 object-cover transition-transform duration-300 group-hover:scale-105">
                         
                         <!-- Hover Options -->
-                        <div class="hover-options absolute top-4 right-4 flex flex-col gap-2">
-                            <button class="bg-white p-2 rounded-full shadow-md hover:bg-gray-100 transition">
+                        <div class="hover-options absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <button class="bg-white p-2 rounded-full shadow-md hover:bg-gray-100 transition-colors">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                                 </svg>
+                            </button>
+                            <button class="bg-white p-2 rounded-full shadow-md hover:bg-gray-100 transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                                </svg>
+                            </button>
+                        </div>
+
+                        <!-- Quick Shop Overlay -->
+                        <div class="absolute bottom-0 left-0 right-0 bg-white bg-opacity-95 py-4 px-6 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                            <button class="w-full bg-black text-white py-2 px-4 rounded hover:bg-gray-800 transition-colors text-sm uppercase tracking-wider">
+                                Quick Shop
                             </button>
                         </div>
                     </div>
                     
                     <!-- Product Info -->
-                    <div class="mt-4">
+                    <div class="mt-4 text-center">
                         <h3 class="text-lg font-medium text-gray-900">${product.name}</h3>
-                        <p class="mt-1 text-gray-700 group-hover:hidden">$${product.price ? product.price.toFixed(2) : ''}</p>
-                        <div class="hidden group-hover:block">
-                            <button class="mt-1 text-sm font-medium text-gray-700 uppercase tracking-wider hover:text-black">ADD TO CART</button>
-                            <button class="mt-1 text-sm font-medium text-gray-700 uppercase tracking-wider hover:text-black">WISHLIST</button>
+                        <div class="mt-2">
+                            <span class="text-gray-700">$${product.price ? product.price.toFixed(2) : 'Contact for price'}</span>
                         </div>
                     </div>
                 `;

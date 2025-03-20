@@ -20,7 +20,7 @@
 <header class="w-full bg-rose-50 shadow-xl border-0">
     <div class="container-fluid px-2 sm:px-3 md:px-4 py-4 flex justify-between items-center">
         <!-- Logo - moved closer to left edge -->
-        <div id="t1" class="text-3xl font-bold tracking-wider ml-2 md:ml-4">KAIRA</div>
+        <div id="t1" class="text-3xl font-bold tracking-wider ml-2 md:ml-4">MAGIC MOMENTS</div>
         
         <!-- Mobile menu button - centered hamburger icon in a button -->
         <button class="md:hidden flex items-center justify-center border border-gray-300 rounded p-2 mx-2" id="mobile-menu-button">
