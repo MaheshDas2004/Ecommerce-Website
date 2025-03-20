@@ -1,12 +1,21 @@
 // tailwind.config.js
-export default {
-    content: ["./FRONTEND/**/*.{html,js,php}"], // Specify the files Tailwind should scan for classes
-    theme: {
-      extend: {
-        colors: {
-          primary: "#1e90ff", // Example custom color
-        },
+module.exports = {
+  content: ["./FRONTEND/**/*.{html,js,php}"],
+  theme: {
+    extend: {
+      colors: {
+        primary: "#1e90ff", // Example custom color
       },
+      transitionProperty: {
+        'height': 'height',
+      }
     },
-    plugins: [], // Add plugins if needed
-  };
+  },
+  variants: {
+    extend: {
+      visibility: ['group-hover'],
+      opacity: ['group-hover'],
+    },
+  },
+  plugins: [],
+};
