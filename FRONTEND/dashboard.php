@@ -28,7 +28,7 @@
     }
   </style>
 </head>
-<body>
+<body >
     <div class=" bg-rose-100 p-16 text-center">
         <h1 id="t2" class="text-5xl mb-8 font-sans">New Collections</h1>
         <p class="max-w-2xl mx-auto text-gray-500 px-4">
@@ -87,6 +87,7 @@
         </div>
     </div>
 
+    <div class="bg-rose-50">
     <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between gap-6 p-6 md:p-8">
         <div class="group cursor-pointer text-center">
             <div class="overflow-hidden mb-3">
@@ -107,7 +108,7 @@
                 class="w-full transition-transform duration-500 group-hover:scale-95"
                 >
             </div>
-            <p class="uppercase text-gray-500 tracking-wider text-sm md:text-base font-light">Shop for women</p>
+            <p class="uppercase text-gray-500 tracking-wider text-sm md:text-base font-bold">Shop for women</p>
         </div>
     
         <div class="group cursor-pointer text-center">
@@ -123,37 +124,69 @@
     </div>
 
     
-<div class="bg-white font-serif ">
-    <div class="container mx-auto px-4 py-8">
-        <!-- Header -->
-        <div class="flex justify-between items-center mb-8">
-            <h2 class="text-3xl font-bold tracking-wide text-gray-900">OUR NEW ARRIVALS</h2>
-            <a href="#" class="uppercase text-sm tracking-wider text-gray-700 hover:underline">View all products</a>
-        </div>
+    <div class=" font-serif ">
+        <div class="container mx-auto px-4 py-8">
+            <!-- Header -->
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-3xl font-bold tracking-wide text-gray-900">OUR NEW ARRIVALS</h2>
+                <a href="index.php?page=shop" class="uppercase text-sm tracking-wider text-gray-700 hover:underline">View all products</a>
+            </div>
         
         <!-- Product Carousel -->
-        <div class="relative">
-            <!-- Left Arrow -->
-            <button class="arrow-btn absolute left-0 z-10 bg-white bg-opacity-70 w-10 h-10 rounded-full flex items-center justify-center shadow-md hover:bg-opacity-100 transition">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                </svg>
-            </button>
+            <div class="relative">
+                <!-- Left Arrow -->
+                <button class="arrow-btn absolute left-0 z-10 bg-white bg-opacity-70 w-10 h-10 rounded-full flex items-center justify-center shadow-md hover:bg-opacity-100 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
             
             <!-- Products Grid -->
-            <div id="products-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-                <!-- Products will be inserted here via JavaScript -->
-            </div>
+                <div id="products-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+                    <!-- Products will be inserted here via JavaScript -->
+                </div>
             
             <!-- Right Arrow -->
-            <button class="arrow-btn absolute right-0 z-10 bg-white bg-opacity-70 w-10 h-10 rounded-full flex items-center justify-center shadow-md hover:bg-opacity-100 transition">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                </svg>
-            </button>
+                <button class="arrow-btn absolute right-0 z-10 bg-white bg-opacity-70 w-10 h-10 rounded-full flex items-center justify-center shadow-md hover:bg-opacity-100 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </button>
+            </div>
         </div>
     </div>
-</div>
+
+
+
+    <div class="bg-gray-200 pt-10">
+    <div class="container mx-auto max-w-7xl px-4 md:px-6 py-8">
+        <div class="flex flex-col md:flex-row bg-white overflow-hidden">
+            <!-- Left side - Image -->
+            <div class="w-full md:w-1/2">
+                <img src="./photos/single-image-2.jpg" alt="Classic Winter Collection" class="w-full h-full object-cover" />
+            </div>
+            
+            <!-- Right side - Content -->
+            <div class="w-full md:w-1/2 p-8 md:p-16 flex flex-col justify-center">
+                <h1 class="text-4xl md:text-5xl font-bold mb-6 tracking-wide">
+                    CLASSIC WINTER<br />COLLECTION
+                </h1>
+                
+                <p class="text-gray-600 mb-8">
+                    Embrace the warmth and elegance of our Classic Winter Collection. Designed to keep you cozy and stylish, each piece is crafted with premium materials and timeless designs. Elevate your winter wardrobe with our exclusive range, perfect for every occasion.
+                </p>
+                
+                <div>
+                    <button 
+                        onclick="" 
+                        class="bg-black text-white px-8 py-3 uppercase font-medium tracking-wide hover:bg-gray-800 transition duration-300">
+                        Shop Collection
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
 <script>
         // Product data
         const products = [

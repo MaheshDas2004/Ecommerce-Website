@@ -7,9 +7,32 @@
     <link rel="stylesheet" href="./output.css">
 </head>
 <body>
-
     <?php include 'navbar.php'; ?>
-    <?php include 'dashboard.php'; ?>
+    
+    <div id="content" class="mt-0"> <!-- Add margin-top to account for fixed navbar -->
+        <?php 
+        $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
+        
+        switch($page) {
+            case 'cart':
+                include 'cart.php';
+                break;
+            case 'wishlist':
+                include 'wishlist.php';
+                break;
+            case 'shop':
+                include 'shop.php';
+                break;
+            case 'contact':
+                include 'contact.php';
+                break;
+            default:
+                include 'dashboard.php';
+                break;
+        }
+        ?>
+    </div>
+    <?php include 'footer.php'; ?>
 
 </body>
 </html>
