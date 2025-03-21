@@ -42,6 +42,7 @@
     --color-gray-800: oklch(0.278 0.033 256.848);
     --color-gray-900: oklch(0.21 0.034 264.665);
     --color-stone-50: oklch(0.985 0.001 106.423);
+    --color-stone-100: oklch(0.97 0.001 106.424);
     --color-stone-200: oklch(0.923 0.003 48.717);
     --color-stone-300: oklch(0.869 0.005 56.366);
     --color-stone-400: oklch(0.709 0.01 56.259);
@@ -804,6 +805,9 @@
   .bg-stone-50 {
     background-color: var(--color-stone-50);
   }
+  .bg-stone-300 {
+    background-color: var(--color-stone-300);
+  }
   .bg-stone-700 {
     background-color: var(--color-stone-700);
   }
@@ -1088,6 +1092,9 @@
   .text-stone-800 {
     color: var(--color-stone-800);
   }
+  .text-stone-900 {
+    color: var(--color-stone-900);
+  }
   .text-white {
     color: var(--color-white);
   }
@@ -1246,6 +1253,13 @@
     &:hover {
       @media (hover: hover) {
         background-color: var(--color-stone-50);
+      }
+    }
+  }
+  .hover\:bg-stone-100 {
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--color-stone-100);
       }
     }
   }

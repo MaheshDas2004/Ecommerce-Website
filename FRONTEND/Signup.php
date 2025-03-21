@@ -2,30 +2,17 @@
 if($_SERVER['REQUEST_METHOD'] == 'POST') {
     $name = $_POST['name'];
     $email = $_POST['email'];
-    $password = $_POST['password'];
-    
-    // Validate password length
-    if(strlen($password) < 6) {
-        echo "Password must be at least 6 characters long.";
-        exit;
-    }
-    
-    include __DIR__ . '/../Backend/config.php';
-    
-    // Prevent SQL injection
-    $name = mysqli_real_escape_string($conn, $name);
-    $email = mysqli_real_escape_string($conn, $email);
-    
-    // Hash the password (NEVER store plain text passwords)
-    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-    
-    $sql = "INSERT INTO `users` (`Name`, `Email`, `password`, `dt`) VALUES ('$name', '$email', '$hashed_password', current_timestamp())";
-    
+    $Password = $_POST['Password'];
+
+    include '../Backend/config.php';
+
+    $sql = "INSERT INTO `users` (`Name`, `Email`, `password`, `dt`) VALUES ('$name', '$email', '$Password', current_timestamp())";
     if(!mysqli_query($conn, $sql)) {
-      echo "Error: " . mysqli_error($conn);
+      echo "Error: " . $sql . "<br>" . mysqli_error($conn);
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -63,9 +50,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                 
                 <!-- Password Field -->
                 <div class="mb-2">
-                    <label for="password" class="block text-sm font-medium mb-1 text-stone-700">Password</label>
-                    <input type="password" id="password" name="password" placeholder="At least 6 characters" 
-                        class="w-full p-2 border border-stone-200 rounded-md focus:border-stone-400 focus:ring-stone-400 focus:outline-none bg-stone-50">
+                    <label for="Password" class="block text-sm font-medium mb-1 text-stone-700">Password</label>
+                    <input type="password" id="Password" placeholder="At least 6 characters" class="w-full p-2 border border-stone-200 rounded-md focus:border-stone-400 focus:ring-stone-400 focus:outline-none bg-stone-50" name="Password" required>
                 </div>
                 
                 <!-- Password Hint -->
@@ -93,7 +79,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <a href="login.php" class="text-stone-700 hover:text-stone-900 hover:underline">Sign in</a>
                     </p>
                 </div>
-                
                 <!-- Terms and Conditions -->
                 <div class="text-xs text-stone-500 text-center">
                     <p>By creating an account, you agree to Magic Moments' 

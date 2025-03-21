@@ -1,3 +1,27 @@
+<?php
+
+    if($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $email = $_POST['email'];
+        $Password = $_POST['Password'];
+    
+        include '../Backend/config.php';
+    
+        $sql = "Select * from users where Email = '$email' AND password = '$Password'";
+        $result = mysqli_query($conn, $sql);
+        $num = mysqli_num_rows($result);
+        if($num == 1) {
+            session_start();
+            $_SESSION['loggedin'] = true;
+            $_SESSION['email'] = $email;
+            header("location: index.php");
+
+        } else {    
+            echo "Login Failed";
+        }
+    }
+    ?>
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -30,17 +54,17 @@
 
                 <!-- Password Field -->
                 <div>
-                    <label for="password" class="block text-sm font-medium mb-1 text-stone-700">Password</label>
+                    <label for="Password" class="block text-sm font-medium mb-1 text-stone-700">Password</label>
                     <input type="password" 
-                           id="password" 
-                           name="password" 
+                           id="Password" 
+                           name="Password" 
                            required 
                            class="w-full p-2 border border-stone-200 rounded-md focus:border-stone-400 focus:ring-stone-400 focus:outline-none bg-stone-50">
                 </div>
 
                 <!-- Submit Button -->
-                <button type="submit" 
-                        class="w-full bg-stone-700 hover:bg-stone-800 text-white font-medium py-2 px-4 rounded-md transition duration-300 ease-in-out">
+                <button type="submit"
+                        class="w-full bg-stone-700 hover:bg-stone-800 text-white font-medium py-2 px-4 rounded-md transition duration-300 ease-in-out cursor-pointer">
                     Sign In
                 </button>
             </form>
