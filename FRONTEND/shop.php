@@ -76,7 +76,7 @@
                     <!-- Product Image -->
                     <img src="<?php echo $product['image']; ?>" 
                          alt="<?php echo $product['title']; ?>" 
-                         class="w-96 h-96 border-b-4 object-cover object-center transition-transform duration-300 group-hover:scale-105">
+                         class="w-96 h-96 border-b-4 object-contain object-center transition-transform duration-300 group-hover:scale-105">
                     
                     <!-- Category Tag -->
                     <div class="absolute top-3 left-3">

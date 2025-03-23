@@ -7,7 +7,7 @@
 </head>
 <body>
     <?php
-    session_start();
+    // session_start();
     echo '<a href="Logout.php" class="hidden md:block text-gray-700 hover:text-black">LOGOUT</a>';
     ?>
     

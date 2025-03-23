@@ -37,22 +37,22 @@ session_start();
         <nav class="hidden md:flex items-center space-x-4 lg:space-x-6">
             <div class="group relative">
                 <a href="index.php" class="text-gray-700 hover:text-black flex items-center">
-                    HOME <i class="fas fa-chevron-down text-xs ml-1"></i>
+                    HOME <i class=" text-xs ml-1"></i>
                 </a>
             </div>
             <div class="group relative">
                 <a href="index.php?page=shop" class="text-gray-700 hover:text-black flex items-center">
-                    SHOP <i class="fas fa-chevron-down text-xs ml-1"></i>
+                    SHOP <i class="text-xs ml-1"></i>
                 </a>
             </div>
             <div class="group relative">
                 <a href="#" class="text-gray-700 hover:text-black flex items-center">
-                    BLOG <i class="fas fa-chevron-down text-xs ml-1"></i>
+                    BLOG <i class="text-xs ml-1"></i>
                 </a>
             </div>
             <div class="group relative">
                 <a href="index.php?page=contact" class="text-gray-700 hover:text-black flex items-center">
-                    CONTACT <i class="fas fa-chevron-down text-xs ml-1"></i>
+                    CONTACT <i class="text-xs ml-1"></i>
                 </a>
             </div>
         </nav>
