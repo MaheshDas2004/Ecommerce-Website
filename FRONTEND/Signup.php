@@ -10,6 +10,13 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     if(!mysqli_query($conn, $sql)) {
       echo "Error: " . $sql . "<br>" . mysqli_error($conn);
     }
+    include 'Login.php';
+    session_start();
+    $_SESSION['loggedin'] = true;
+    $_SESSION['email'] = $email;
+    $_SESSION['Password'] = $Password;
+    header("location: index.php");
+    exit;
 }
 ?>
 
@@ -18,14 +25,14 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Magic Moments - Sign Up</title>
+    <title>VEYRA - Sign Up</title>
     <link rel="stylesheet" href="./output.css">
 </head>
 <body class="bg-stone-50 min-h-screen">
     <div class="flex flex-col items-center pt-8 pb-16">
         <!-- Logo -->
         <div class="mb-4 text-4xl font-bold text-stone-700">
-            MAGIC MOMENTS
+            VEYRA
         </div>
         
         <!-- Registration Form Card -->
@@ -81,7 +88,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </div>
                 <!-- Terms and Conditions -->
                 <div class="text-xs text-stone-500 text-center">
-                    <p>By creating an account, you agree to Magic Moments' 
+                    <p>By creating an account, you agree to VEYRA's 
                         <a href="#" class="text-stone-700 hover:text-stone-900 hover:underline">Conditions of Use</a> and 
                         <a href="#" class="text-stone-700 hover:text-stone-900 hover:underline">Privacy Policy</a>.
                     </p>

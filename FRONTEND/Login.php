@@ -1,5 +1,4 @@
 <?php
-
     if($_SERVER['REQUEST_METHOD'] == 'POST') {
         $email = $_POST['email'];
         $Password = $_POST['Password'];
@@ -13,13 +12,13 @@
             session_start();
             $_SESSION['loggedin'] = true;
             $_SESSION['email'] = $email;
+            $_SESSION['Password'] = $Password;
             header("location: index.php");
 
         } else {    
             echo "Login Failed";
         }
     }
-    ?>
 ?>
 
 <!DOCTYPE html>
@@ -27,14 +26,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Magic Moments - Sign In</title>
+    <title>VEYRA - Sign In</title>
     <link rel="stylesheet" href="./output.css">
 </head>
 <body class="bg-stone-50 min-h-screen">
     <div class="container mx-auto px-4 flex flex-col items-center pt-8 pb-16">
         <!-- Logo -->
         <div class="mb-8 text-4xl font-bold text-stone-700">
-            MAGIC MOMENTS
+            VEYRA
         </div>
         
         <!-- Login Form Card -->
@@ -80,7 +79,7 @@
 
             <!-- Create Account Section -->
             <div class="text-center">
-                <p class="text-sm text-stone-600 mb-4">New to Magic Moments?</p>
+                <p class="text-sm text-stone-600 mb-4">New to VEYRA?</p>
                 <a href="Signup.php" 
                    class="block w-full py-2 px-4 border border-stone-300 text-stone-700 rounded-md hover:bg-stone-50 transition duration-300 ease-in-out text-sm text-center">
                     Create your account
@@ -96,7 +95,7 @@
                 <a href="#" class="text-stone-600 hover:text-stone-800 hover:underline">Help</a>
             </div>
             <p class="text-xs text-stone-500 text-center">
-                © 2025 Magic Moments. All rights reserved.
+                © 2025 VEYRA. All rights reserved.
             </p>
         </div>
     </div>

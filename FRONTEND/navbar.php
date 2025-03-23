@@ -1,9 +1,13 @@
+
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>veyra-navbar</title>
   <link rel="stylesheet" href="./output.css">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
@@ -20,7 +24,7 @@
 <header class="fixed top-0 left-0 right-0 w-full bg-rose-50 shadow-xl border-0 z-50">
     <div class="container-fluid px-2 sm:px-3 md:px-4 py-4 flex justify-between items-center">
         <!-- Logo - moved closer to left edge -->
-        <div id="t1" class="text-3xl font-bold tracking-wider ml-2 md:ml-4">MAGIC MOMENTS</div>
+        <div id="t1" class="text-3xl font-bold tracking-wider ml-2 md:ml-4">VEYRA<sub>.co</sub></div>
         
         <!-- Mobile menu button - centered hamburger icon in a button -->
         <button class="md:hidden flex items-center justify-center border border-gray-300 rounded p-2 mx-2" id="mobile-menu-button">
@@ -55,19 +59,40 @@
         
         <!-- User actions - moved closer to right edge -->
         <div class="flex items-center space-x-3 md:space-x-4 mr-2 md:mr-4">
-            <a href="Login.php" class="hidden md:block text-gray-700 hover:text-black">SIGNIN</a>
-            <a href="index.php?page=wishlist" class="text-gray-700 hover:text-black flex text-lg items-center" aria-label="Wishlist">
+            <?php
+            if(!(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true)){
+                // echo '<a href="Logout.php" class="hidden md:block text-gray-700 hover:text-black">LOGOUT</a>';
+                echo '<a href="Login.php" class="hidden md:block text-gray-700 hover:text-black">LOGIN</a>';
+
+            }
+             ?>
+            <?php
+            if(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true){
+                echo '<div class="bg-stone-100 rounded-xl border-2 border-stone-200 p-2 flex items-center">';
+                echo '<a href="profile.php" class="text-gray-700 hover:text-black flex text-lg items-center" aria-label="Profile">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" 
+                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
-                (0)
-            </a>
+                </a>';
+                include '../Backend/config.php';
+
+                $email = $_SESSION['email'];
+                $sql = "Select Name from users where Email = '$email'";
+                $result = mysqli_query($conn, $sql);
+                $row = mysqli_fetch_assoc($result); //fetches the result from the database
+                echo " $row[Name]";
+                echo '</div>';
+            }
+            ?>
+                
             <a href="index.php?page=cart" class="text-gray-700 hover:text-black flex text-xl items-center" aria-label="Cart">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                 </svg>
                 (0)
             </a>
+
             <a href="#" class="text-gray-700 hover:text-black" aria-label="Search" id="search-toggle">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />

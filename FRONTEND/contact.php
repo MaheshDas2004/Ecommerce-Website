@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>VEYRA-contactpage</title>
 </head>
 <body>
 <section class="text-gray-600 body-font relative">

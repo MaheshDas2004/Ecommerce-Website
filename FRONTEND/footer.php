@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>VEYRA</title>
 </head>
 <body>
     <!-- Footer Section -->
@@ -13,7 +13,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
       <!-- Brand Column -->
       <div class="mb-8 sm:mb-0">
-        <h2 class="text-3xl font-bold mb-4 uppercase">KAIRA</h2>
+        <h2 class="text-3xl font-bold mb-4 uppercase">VEYRA</h2>
         <p class="text-gray-600 mb-6 text-sm md:text-base">
           Gravida massa volutpat aenean odio. Amet, turpis erat nullam fringilla elementum diam in. Nisi, purus vitae, ultrices nunc. Sit ac sit suscipit hendrerit.
         </p>
@@ -81,7 +81,7 @@
       <div>
         <h3 class="text-lg font-bold mb-4 uppercase">Contact Us</h3>
         <p class="text-gray-600 mb-2 text-sm md:text-base">Do you have any questions or suggestions?</p>
-        <a href="mailto:contact@yourcompany.com" class="text-gray-900 font-medium mb-6 block hover:underline text-sm md:text-base">contact@yourcompany.com</a>
+        <a href="mailto:contact@veyra.com" class="text-gray-900 font-medium mb-6 block hover:underline text-sm md:text-base">contact@veyra.com</a>
         
         <p class="text-gray-600 mb-2 mt-4 text-sm md:text-base">Do you need support? Give us a call.</p>
         <a href="tel:+43720115278" class="text-gray-900 font-medium block hover:underline text-sm md:text-base">+43 720 11 52 78</a>
@@ -108,11 +108,7 @@
 
         <!-- Copyright Information -->
         <div class="text-gray-600 text-xs md:text-sm text-center md:text-right">
-          <p>© Copyright 2022 Kaira. All rights reserved.</p>
-          <p class="mt-1">
-            Design by <a href="#" class="text-gray-900 hover:underline">TemplatesJungle</a>
-            <span class="block md:inline md:ml-1">Distribution By <a href="#" class="text-gray-900 hover:underline">ThemeWagon</a></span>
-          </p>
+          <p>© Copyright 2025 VEYRA. All rights reserved.</p>
         </div>
       </div>
     </div>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>VEYRA</title>
     <link rel="stylesheet" href="./output.css">
 </head>
 <body>
@@ -17,8 +17,14 @@
             case 'cart':
                 include 'cart.php';
                 break;
-            case 'wishlist':
-                include 'wishlist.php';
+            case 'men':
+                include 'MEN.php';
+                break;
+            case 'women':
+                include 'womensshopping.php';
+                break;
+            case 'accessories':
+                include 'accessories.php';
                 break;
             case 'shop':
                 include 'shop.php';
