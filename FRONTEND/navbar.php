@@ -69,7 +69,7 @@ session_start();
             <?php
             if(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true){
                 echo '<div class="bg-stone-100 rounded-xl border-2 border-stone-200 p-2 flex items-center">';
-                echo '<a href="profile.php" class="text-gray-700 hover:text-black flex text-lg items-center" aria-label="Profile">
+                echo '<a href="index.php?page=profile" class="text-gray-700 hover:text-black flex text-lg items-center" aria-label="Profile">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" 
                 d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />

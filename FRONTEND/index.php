@@ -32,6 +32,9 @@
             case 'contact':
                 include 'contact.php';
                 break;
+            case 'profile':
+                include 'profile.php';
+                break;
             default:
                 include 'dashboard.php';
                 break;
