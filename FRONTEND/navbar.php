@@ -1,4 +1,3 @@
-
 <?php
 session_start();
 ?>
@@ -63,9 +62,8 @@ session_start();
             if(!(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true)){
                 // echo '<a href="Logout.php" class="hidden md:block text-gray-700 hover:text-black">LOGOUT</a>';
                 echo '<a href="Login.php" class="hidden md:block text-gray-700 hover:text-black">LOGIN</a>';
-
             }
-             ?>
+            ?>
             <?php
             if(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true){
                 echo '<div class="bg-stone-100 rounded-xl border-2 border-stone-200 p-2 flex items-center">';
@@ -73,17 +71,40 @@ session_start();
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" 
                 d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                </svg>
-                </a>';
-                include '../Backend/config.php';
-
-                $email = $_SESSION['email'];
-                $sql = "Select Name from users where Email = '$email'";
-                $result = mysqli_query($conn, $sql);
-                $row = mysqli_fetch_assoc($result); //fetches the result from the database
-                echo " $row[Name]";
+                </svg>';
+                
+                
+                // Add error checking for email session variable
+                if(isset($_SESSION['email'])) {
+                    include '../Backend/config.php';
+                    $email = $_SESSION['email'];
+                    
+                    // Use prepared statement for security
+                    $sql = "SELECT Name FROM users WHERE Email = ?";
+                    $stmt = mysqli_prepare($conn, $sql);
+                    
+                    if($stmt) {
+                        mysqli_stmt_bind_param($stmt, "s", $email);
+                        mysqli_stmt_execute($stmt);
+                        mysqli_stmt_bind_result($stmt, $name);
+                        
+                        if(mysqli_stmt_fetch($stmt)) {
+                            echo " $name";
+                        } else {
+                            echo " User"; // Fallback if name not found
+                        }
+                        
+                        mysqli_stmt_close($stmt);
+                    } else {
+                        echo " User"; // Fallback if query fails
+                    }
+                } else {
+                    echo " User"; // Fallback if email not in session
+                }
+                echo '</a>';
                 echo '</div>';
-            }
+                
+                }
             ?>
                 
             <a href="index.php?page=cart" class="text-gray-700 hover:text-black flex text-xl items-center" aria-label="Cart">
@@ -161,40 +182,52 @@ session_start();
     </div>
 </div>
 
+<!-- Script for mobile menu and search overlay -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', function() {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+        
+        // Search overlay functionality
         const searchToggle = document.getElementById('search-toggle');
         const searchOverlay = document.getElementById('search-overlay');
         const closeSearch = document.getElementById('close-search');
         
         // Open search overlay with smooth transition
-        searchToggle.addEventListener('click', function(e) {
-            e.preventDefault();
-            document.body.style.overflow = 'hidden'; // Prevent scrolling
-            searchOverlay.classList.remove('translate-y-full');
-            searchOverlay.querySelector('input').focus();
-        });
-        
-        // Close search overlay
-        closeSearch.addEventListener('click', function() {
-            searchOverlay.classList.add('translate-y-full');
-            document.body.style.overflow = '';
+        if (searchToggle && searchOverlay && closeSearch) {
+            searchToggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.body.style.overflow = 'hidden'; // Prevent scrolling
+                searchOverlay.classList.remove('translate-y-full');
+                searchOverlay.querySelector('input').focus();
+            });
             
-            // Wait for transition to complete before focusing back
-            setTimeout(function() {
-                searchToggle.focus();
-            }, 500);
-        });
-        
-        // Close on escape key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && !searchOverlay.classList.contains('translate-y-full')) {
-                closeSearch.click();
-            }
-        });
+            // Close search overlay
+            closeSearch.addEventListener('click', function() {
+                searchOverlay.classList.add('translate-y-full');
+                document.body.style.overflow = '';
+                
+                // Wait for transition to complete before focusing back
+                setTimeout(function() {
+                    searchToggle.focus();
+                }, 500);
+            });
+            
+            // Close on escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && !searchOverlay.classList.contains('translate-y-full')) {
+                    closeSearch.click();
+                }
+            });
+        }
     });
 </script>
-
-  
 </body>
 </html>
