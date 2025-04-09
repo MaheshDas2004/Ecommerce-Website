@@ -98,6 +98,11 @@
                             <span class="text-sm transition-transform group-hover:translate-x-1">›</span>
                         </a>
                     </li>
+                    <li class="mt-8">
+                        <a href="#" class="flex items-center justify-center no-underline bg-gray-800 text-white py-3 px-4 rounded transition hover:bg-gray-700">
+                            <span>Logout</span>
+                        </a>
+                    </li>
                 </ul>
             </aside>
             
