@@ -66,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
         } else {
             $_SESSION['error'] = "Invalid OTP. Please try again.";
-            $_SESSION['show_otp_form'] = true;
+            $_SESSION['show_otp_form'] = false;
             header("Location: Signup.php");
             exit();
         }

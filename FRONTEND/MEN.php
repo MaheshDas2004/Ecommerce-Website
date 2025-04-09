@@ -10,6 +10,11 @@ if (mysqli_num_rows($result) > 0) {
         $menproducts[] = $row;
     }
 }
+
+function formatRating($rate, $count) {
+  $rate = number_format($rate, 1);
+  return "$rate ★ ($count)";
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -19,55 +24,120 @@ if (mysqli_num_rows($result) > 0) {
     <title>VEYRA - Shop</title>
     <link rel="stylesheet" href="./output.css">
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        h1, h2, h3, .logo-text {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .product-card {
+            transition: all 0.3s ease;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        .product-image-wrapper {
+            overflow: hidden;
+            position: relative;
+            aspect-ratio: 1/1;
+            background-color: #f9fafb;
+        }
+        
+        .product-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 12px;
+            transition: transform 0.5s ease;
+        }
+        
+        .product-card:hover .product-image {
+            transform: scale(1.05);
+        }
+        
+        .category-pill {
+            transition: all 0.3s ease;
+        }
+        
+        .category-pill:hover {
+            transform: scale(1.05);
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(to right, rgba(254, 226, 226, 0.9), rgba(252, 231, 243, 0.6));
+        }
+        
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 3px;
+            background-color: #f43f5e;
+            margin-top: 8px;
+        }
+    </style>
 </head>
 <body class="bg-pink-50">
     
-<section class="container mx-auto px-2 sm:px-4 py-6 sm:py-12">
-  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
-    <!-- Product Card -->
-    <?php foreach ($menproducts as $menproduct) { ?>
-    <div class="group  border-2 border-rose-50 shadow-lg rounded-lg overflow-hidden">
-      <div class="relative">
-        <!-- Product Image Container with Fixed Height -->
-        <div class="relative aspect-[4/3] sm:aspect-[6/5]">
-          <img alt="<?php echo $menproduct['title']; ?>" 
-               class="object-contain object-center w-full h-full absolute inset-0 border-b-2 border-rose-700" 
-               src="<?php echo $menproduct['image']; ?>">
-          
-          <!-- Hover Elements -->
-          <div class="absolute inset-0 bg-black/5 flex flex-col justify-between opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <!-- Cart Icon Top Right -->
-            <div class="flex justify-end p-2 sm:p-4">
-              <button class="bg-white rounded-full p-2 sm:p-3 cursor-pointer hover:bg-stone-50 shadow-lg">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                </svg>
-              </button>
+<section id="new-arrivals" class="container mx-auto px-4 mb-16">
+        <h2 class="section-title text-2xl md:text-3xl font-bold text-gray-800 mb-8">Our Collection</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <?php foreach ($menproducts as $menproduct) { ?>
+            <div class="product-card bg-white overflow-hidden shadow-md">
+                <!-- Product Image Container with white bg -->
+                <div class="product-image-wrapper border-b border-gray-100">
+                    <!-- Product Image -->
+                    <img src="<?php echo $menproduct['image']; ?>" 
+                         alt="<?php echo $menproduct['title']; ?>" 
+                         class="product-image">
+                    
+                    <!-- Category Tag -->
+                    <div class="absolute top-2 left-2">
+                        <span class="bg-rose-100 text-rose-600 px-2 py-1 rounded-full text-xs font-medium">
+                            <?php echo ucfirst($menproduct['category']); ?>
+                        </span>
+                    </div>
+                    
+                    <!-- Quick Action Buttons -->
+                    <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button class="bg-white p-1.5 rounded-full shadow-sm hover:bg-gray-50 transition-colors">
+                            <i class="far fa-heart text-gray-600 text-sm"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Product Info -->
+                <div class="p-4">
+                    <div class="flex items-center text-amber-400 text-xs mb-1">
+                        <?php echo formatRating($menproduct['rating_rate'], $menproduct['rating_count']); ?>
+                    </div>
+                    <h3 class="text-sm font-medium text-gray-800 mb-1 line-clamp-2 h-10">
+                        <a href="product.php?id=<?php echo $menproduct['id']; ?>" class="hover:text-rose-600 transition-colors">
+                            <?php echo $menproduct['title']; ?>
+                        </a>
+                    </h3>
+                    <div class="flex justify-between items-center mt-2">
+                        <span class="text-gray-900 font-semibold">
+                            $<?php echo number_format($menproduct['price'], 2); ?>
+                        </span>
+                        <button class="bg-rose-500 hover:bg-rose-600 text-white px-3 py-1 rounded-full text-xs transition-colors">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
             </div>
-            
-            <!-- Quick Shop Button Bottom -->
-            <div class="absolute bottom-0 left-0 right-0 bg-white bg-opacity-95 py-2 sm:py-4 px-3 sm:px-6 transform translate-y group-hover:translate-y-0 transition-transform duration-300">
-              <button class="w-full bg-black text-white py-2 sm:py-3 px-4 text-sm sm:text-base font-medium hover:bg-gray-800 transition-colors tracking-wider uppercase rounded">
-                Quick Shop
-              </button>
-            </div>
-          </div>
+            <?php } ?>
         </div>
-        
-        <!-- Product Info -->
-        <div class="p-4 text-center">
-          <h2 class="text-gray-900 text-lg sm:text-xl font-medium mb-1 sm:mb-2 line-clamp-2">
-            <?php echo $menproduct['title']; ?>
-          </h2>
-          <p class="text-gray-700 font-semibold">
-            $<?php echo number_format($menproduct['price'], 2); ?>
-          </p>
-        </div>
-      </div>
-    </div>
-    <?php } ?>
-  </div>
-</section>
+    </section>
 
 </body>
 </html>

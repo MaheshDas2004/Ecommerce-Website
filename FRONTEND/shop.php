@@ -197,7 +197,7 @@
         <h2 class="section-title text-2xl md:text-3xl font-bold text-gray-800 mb-8">Our Collection</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             <?php foreach ($products as $product) { ?>
-            <div class="product-card bg-white rounded-lg overflow-hidden shadow-md">
+            <div class="product-card bg-white overflow-hidden shadow-md">
                 <!-- Product Image Container with white bg -->
                 <div class="product-image-wrapper border-b border-gray-100">
                     <!-- Product Image -->
@@ -226,17 +226,30 @@
                         <?php echo formatRating($product['rating_rate'], $product['rating_count']); ?>
                     </div>
                     <h3 class="text-sm font-medium text-gray-800 mb-1 line-clamp-2 h-10">
-                        <a href="product.php?id=<?php echo $product['id']; ?>" class="hover:text-rose-600 transition-colors">
+                        <a href="product.php?id=<?php echo $product['id']; ?>" class="hover:text-blue-600 transition-colors">
                             <?php echo $product['title']; ?>
                         </a>
                     </h3>
-                    <div class="flex justify-between items-center mt-2">
-                        <span class="text-gray-900 font-semibold">
-                            $<?php echo number_format($product['price'], 2); ?>
-                        </span>
-                        <button class="bg-rose-500 hover:bg-rose-600 text-white px-3 py-1 rounded-full text-xs transition-colors">
-                            Add to Cart
-                        </button>
+                    <div class="flex flex-col space-y-2 mt-2">
+                        <!-- Price Display -->
+                        <div class="flex items-center justify-between">
+                            <span class="text-lg font-bold text-gray-900">$<?php echo number_format($product['price'], 2); ?></span>
+                            <button onclick="addToWishlist(<?php echo $product['id']; ?>)" 
+                                    class="text-gray-400 hover:text-red-500 transition-colors">
+                                <i class="far fa-heart"></i>
+                            </button>
+                        </div>
+                        <!-- Action Buttons -->
+                        <div class="flex space-x-2">
+                            <button onclick="buyNow(<?php echo $product['id']; ?>)" 
+                                    class="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors">
+                                Buy Now
+                            </button>
+                            <button onclick="addToCart(<?php echo $product['id']; ?>)" 
+                                    class="flex-1 border border-blue-600 text-blue-600 hover:bg-blue-50 px-4 py-2 rounded transition-colors">
+                                Add to Cart
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
