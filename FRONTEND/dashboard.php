@@ -143,21 +143,23 @@
             </div>
         
         <!-- Product Carousel -->
-            <div class="relative">
+            <div class="relative overflow-hidden">
                 <!-- Left Arrow -->
-                <button class="arrow-btn absolute left-0 z-10 bg-white bg-opacity-70 w-10 h-10 rounded-full flex items-center justify-center shadow-md hover:bg-opacity-100 transition">
+                <button class="arrow-btn absolute left-0 top-1/2 z-10 bg-white bg-opacity-70 w-10 h-10 rounded-full flex items-center justify-center shadow-md hover:bg-opacity-100 transition">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                     </svg>
                 </button>
             
             <!-- Products Grid -->
-                <div id="products-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-                    <!-- Products will be inserted here via JavaScript -->
+                <div class="carousel-container overflow-hidden">
+                    <div id="products-container" class="flex transition-transform duration-500 ease-in-out">
+                        <!-- Products will be inserted here via JavaScript -->
+                    </div>
                 </div>
             
             <!-- Right Arrow -->
-                <button class="arrow-btn absolute right-0 z-10 bg-white bg-opacity-70 w-10 h-10 rounded-full flex items-center justify-center shadow-md hover:bg-opacity-100 transition">
+                <button class="arrow-btn absolute right-0 top-1/2 z-10 bg-white bg-opacity-70 w-10 h-10 rounded-full flex items-center justify-center shadow-md hover:bg-opacity-100 transition">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                     </svg>
@@ -241,21 +243,19 @@
         ];
         
         // Display products function
-        function displayProducts(startIndex = 0) {
+        function displayProducts() {
             const container = document.getElementById('products-container');
             container.innerHTML = '';
             
-            // Display 4 products starting from startIndex
-            for (let i = startIndex; i < startIndex + 4; i++) {
-                const index = i % products.length;
-                const product = products[index];
-                
+            // Display all products
+            products.forEach(product => {
                 const productCard = document.createElement('div');
-                productCard.className = 'product-card relative group';
+                productCard.className = 'product-card relative group w-full sm:w-1/2 md:w-1/4 flex-shrink-0 px-2';
                 
                 productCard.innerHTML = `
                     <div class="relative overflow-hidden">
-                        <img src="${product.image}" alt="${product.name}" class="w-full h-96 object-cover transition-transform duration-300 group-hover:scale-105">
+                        <img src="${product.image}" alt="${product.name}" 
+                            class="w-full h-96 object-cover transition-transform duration-300 group-hover:scale-105">
                         
                         <!-- Hover Options -->
                         <div class="hover-options absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -284,26 +284,50 @@
                 `;
                 
                 container.appendChild(productCard);
-            }
+            });
         }
         
-        // Initialize with first 4 products
-        displayProducts(0);
+        // Initialize carousel
+        displayProducts();
         
-        // Set up carousel navigation
         let currentIndex = 0;
+        const itemWidth = 100; // percentage
+        const container = document.getElementById('products-container');
         const prevButton = document.querySelector('.arrow-btn:first-child');
         const nextButton = document.querySelector('.arrow-btn:last-child');
         
-        prevButton.addEventListener('click', () => {
-            currentIndex = (currentIndex - 1 + products.length) % products.length;
-            displayProducts(currentIndex);
-        });
+        function slideCarousel(direction) {
+            const maxIndex = products.length - 4; // Show 4 items at a time
+            
+            if (direction === 'next') {
+                currentIndex = Math.min(currentIndex + 1, maxIndex);
+            } else {
+                currentIndex = Math.max(currentIndex - 1, 0);
+            }
+            
+            const offset = -(currentIndex * (100/4)); // 25% per item
+            container.style.transform = `translateX(${offset}%)`;
+        }
         
-        nextButton.addEventListener('click', () => {
-            currentIndex = (currentIndex + 1) % products.length;
-            displayProducts(currentIndex);
-        });
+        // Event listeners
+        prevButton.addEventListener('click', () => slideCarousel('prev'));
+        nextButton.addEventListener('click', () => slideCarousel('next'));
+        
+        // Add responsive handling
+        function updateCarousel() {
+            const width = window.innerWidth;
+            if (width < 640) { // Mobile
+                itemWidth = 100;
+            } else if (width < 768) { // Tablet
+                itemWidth = 50;
+            } else { // Desktop
+                itemWidth = 25;
+            }
+        }
+        
+        // Listen for window resize
+        window.addEventListener('resize', updateCarousel);
+        updateCarousel(); // Initial setup
     </script>    
 </body>
 </html>

@@ -27,96 +27,216 @@
     <link rel="stylesheet" href="./output.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        h1, h2, h3, .logo-text {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .product-card {
+            transition: all 0.3s ease;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        .product-image-wrapper {
+            overflow: hidden;
+            position: relative;
+            aspect-ratio: 1/1;
+            background-color: #f9fafb;
+        }
+        
+        .product-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 12px;
+            transition: transform 0.5s ease;
+        }
+        
+        .product-card:hover .product-image {
+            transform: scale(1.05);
+        }
+        
+        .category-pill {
+            transition: all 0.3s ease;
+        }
+        
+        .category-pill:hover {
+            transform: scale(1.05);
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(to right, rgba(254, 226, 226, 0.9), rgba(252, 231, 243, 0.6));
+        }
+        
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 3px;
+            background-color: #f43f5e;
+            margin-top: 8px;
+        }
+    </style>
 </head>
-<body class="bg-rose-50">
+<body class="bg-gray-50">
+   
     
-    <!-- Page Title -->
-    <div class="bg-white shadow-sm">
-      <div class="container mx-auto px-4 py-6">
-        <h1 class="text-2xl md:text-3xl font-bold text-gray-800">Our Collection</h1>
-        <div class="flex items-center text-sm text-gray-500 mt-2">
-          <a href="index.php" class="hover:text-rose-600">Home</a>
-          <span class="mx-2">/</span>
-          <span class="text-gray-700">Our Collection</span>
-        </div>
-      </div>
-    </div>
-    <!-- Filters -->
-    <div class="container mx-auto px-4 py-6">
-        <div class="flex flex-col md:flex-row justify-between items-center bg-white p-4 rounded-lg shadow-sm">
-            <div class="flex items-center mb-4 md:mb-0">
-                <span class="text-gray-600 mr-2">Filter:</span>
-                <select class="border rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-rose-300">
-                    <option>All Categories</option>
-                    <option>Men's Clothing</option>
-                    <option>Women's Clothing</option>
-                    <option>Jewelry</option>
-                    <option>Electronics</option>
-                </select>
+    <!-- Hero Section -->
+    <div class="hero-gradient py-12 mb-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row items-center justify-between">
+                <div class="md:w-1/2 mb-8 md:mb-0">
+                    <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Discover Your Style</h1>
+                    <p class="text-lg text-gray-700 mb-6">Explore our curated collection of premium fashion and lifestyle products.</p>
+                    <div class="flex space-x-4">
+                        <a href="#new-arrivals" class="bg-rose-600 hover:bg-rose-700 text-white px-6 py-3 rounded-md transition-colors shadow-md">
+                            Shop Now
+                        </a>
+                        <a href="#categories" class="bg-transparent border-2 border-gray-800 text-gray-800 hover:bg-gray-800 hover:text-white px-6 py-3 rounded-md transition-colors">
+                            Explore Categories
+                        </a>
+                    </div>
+                </div>
+                <div class="md:w-1/2 flex justify-center">
+                    <img src="./images/hero-fashion.png" alt="Fashion Collection" class="max-w-full h-auto rounded-lg shadow-xl">
+                </div>
             </div>
-            <div class="flex items-center">
-                <span class="text-gray-600 mr-2">Sort by:</span>
-                <select class="border rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-rose-300">
-                    <option>Featured</option>
-                    <option>Price: Low to High</option>
-                    <option>Price: High to Low</option>
-                    <option>Rating</option>
-                    <option>Newest</option>
-                </select>
+        </div>
+    </div>
+    
+    <!-- Categories Section -->
+    <section id="categories" class="container mx-auto px-4 mb-12">
+        <h2 class="section-title text-2xl md:text-3xl font-bold text-gray-800 mb-8">Shop by Category</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <a href="#" class="category-pill bg-gradient-to-r from-rose-50 to-rose-100 p-4 rounded-lg shadow-sm flex flex-col items-center justify-center text-center hover:shadow-md transition-all">
+                <div class="w-16 h-16 bg-rose-200 rounded-full flex items-center justify-center mb-3">
+                    <i class="fas fa-tshirt text-rose-600 text-xl"></i>
+                </div>
+                <span class="font-medium text-gray-800">Men's Clothing</span>
+            </a>
+            <a href="#" class="category-pill bg-gradient-to-r from-purple-50 to-purple-100 p-4 rounded-lg shadow-sm flex flex-col items-center justify-center text-center hover:shadow-md transition-all">
+                <div class="w-16 h-16 bg-purple-200 rounded-full flex items-center justify-center mb-3">
+                    <i class="fas fa-female text-purple-600 text-xl"></i>
+                </div>
+                <span class="font-medium text-gray-800">Women's Clothing</span>
+            </a>
+            <a href="#" class="category-pill bg-gradient-to-r from-amber-50 to-amber-100 p-4 rounded-lg shadow-sm flex flex-col items-center justify-center text-center hover:shadow-md transition-all">
+                <div class="w-16 h-16 bg-amber-200 rounded-full flex items-center justify-center mb-3">
+                    <i class="fas fa-gem text-amber-600 text-xl"></i>
+                </div>
+                <span class="font-medium text-gray-800">Jewelry</span>
+            </a>
+            <a href="#" class="category-pill bg-gradient-to-r from-blue-50 to-blue-100 p-4 rounded-lg shadow-sm flex flex-col items-center justify-center text-center hover:shadow-md transition-all">
+                <div class="w-16 h-16 bg-blue-200 rounded-full flex items-center justify-center mb-3">
+                    <i class="fas fa-laptop text-blue-600 text-xl"></i>
+                </div>
+                <span class="font-medium text-gray-800">Electronics</span>
+            </a>
+        </div>
+    </section>
+    
+    <!-- Filters Section -->
+    <div class="container mx-auto px-4 mb-8">
+        <div class="bg-white p-6 rounded-xl shadow-md">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex items-center mb-4 md:mb-0">
+                    <span class="text-gray-600 mr-3 font-medium">Filter by:</span>
+                    <div class="flex flex-wrap gap-2">
+                        <select class="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rose-300 focus:border-rose-300">
+                            <option>All Categories</option>
+                            <option>Men's Clothing</option>
+                            <option>Women's Clothing</option>
+                            <option>Jewelry</option>
+                            <option>Electronics</option>
+                        </select>
+                        <select class="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rose-300 focus:border-rose-300">
+                            <option>Price Range</option>
+                            <option>Under $25</option>
+                            <option>$25 - $50</option>
+                            <option>$50 - $100</option>
+                            <option>$100+</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <span class="text-gray-600 mr-3 font-medium">Sort by:</span>
+                    <select class="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rose-300 focus:border-rose-300">
+                        <option>Featured</option>
+                        <option>Price: Low to High</option>
+                        <option>Price: High to Low</option>
+                        <option>Rating</option>
+                        <option>Newest</option>
+                    </select>
+                </div>
+            </div>
+            <!-- Active Filters -->
+            <div class="mt-4 flex flex-wrap gap-2">
+                <span class="text-sm text-gray-600">Active filters:</span>
+                <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs flex items-center">
+                    All Products
+                    <button class="ml-1 text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </span>
             </div>
         </div>
     </div>
 
     <!-- Products Grid -->
-    <section class="container mx-auto px-2 sm:px-4 py-6 sm:py-12">
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+    <section id="new-arrivals" class="container mx-auto px-4 mb-16">
+        <h2 class="section-title text-2xl md:text-3xl font-bold text-gray-800 mb-8">Our Collection</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             <?php foreach ($products as $product) { ?>
-            <div class="group border-2 border-rose-50 shadow-lg overflow-hidden bg-white rounded-lg">
-                <div class="relative overflow-hidden">
+            <div class="product-card bg-white rounded-lg overflow-hidden shadow-md">
+                <!-- Product Image Container with white bg -->
+                <div class="product-image-wrapper border-b border-gray-100">
                     <!-- Product Image -->
                     <img src="<?php echo $product['image']; ?>" 
                          alt="<?php echo $product['title']; ?>" 
-                         class="w-96 h-96 border-b-4 object-contain object-center transition-transform duration-300 group-hover:scale-105">
+                         class="product-image">
                     
                     <!-- Category Tag -->
-                    <div class="absolute top-3 left-3">
-                        <span class="bg-rose-100 text-rose-600 px-2 py-1 rounded text-xs font-medium">
+                    <div class="absolute top-2 left-2">
+                        <span class="bg-rose-100 text-rose-600 px-2 py-1 rounded-full text-xs font-medium">
                             <?php echo ucfirst($product['category']); ?>
                         </span>
                     </div>
                     
-                    <!-- Hover Options -->
-                    <div class="hover-options absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <button class="bg-white p-2 rounded-full shadow-md hover:bg-gray-100 transition-colors" title="Add to cart">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                            </svg>
-                        </button>
-                        
-                    </div>
-
-                    <!-- Quick Shop Overlay -->
-                    <div class="absolute bottom-0 left-0 right-0 bg-white bg-opacity-95 py-4 px-6 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                        <button class="w-full bg-black text-white py-2 px-4 rounded hover:bg-gray-800 transition-colors text-sm uppercase tracking-wider">
-                            Quick Shop
+                    <!-- Quick Action Buttons -->
+                    <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button class="bg-white p-1.5 rounded-full shadow-sm hover:bg-gray-50 transition-colors">
+                            <i class="far fa-heart text-gray-600 text-sm"></i>
                         </button>
                     </div>
                 </div>
                 
                 <!-- Product Info -->
-                <div class="p-4 text-center">
-                    <h3 class="text-lg font-medium text-gray-900 mb-2 line-clamp-2 hover:text-rose-600 transition-colors">
-                        <a href="product.php?id=<?php echo $product['id']; ?>">
+                <div class="p-4">
+                    <div class="flex items-center text-amber-400 text-xs mb-1">
+                        <?php echo formatRating($product['rating_rate'], $product['rating_count']); ?>
+                    </div>
+                    <h3 class="text-sm font-medium text-gray-800 mb-1 line-clamp-2 h-10">
+                        <a href="product.php?id=<?php echo $product['id']; ?>" class="hover:text-rose-600 transition-colors">
                             <?php echo $product['title']; ?>
                         </a>
                     </h3>
-                    <div class="flex justify-center items-center text-amber-400 text-sm mb-2">
-                        <?php echo formatRating($product['rating_rate'], $product['rating_count']); ?>
-                    </div>
-                    <div class="mt-2">
-                        <span class="text-gray-700 font-semibold">
+                    <div class="flex justify-between items-center mt-2">
+                        <span class="text-gray-900 font-semibold">
                             $<?php echo number_format($product['price'], 2); ?>
                         </span>
+                        <button class="bg-rose-500 hover:bg-rose-600 text-white px-3 py-1 rounded-full text-xs transition-colors">
+                            Add to Cart
+                        </button>
                     </div>
                 </div>
             </div>
@@ -125,75 +245,105 @@
     </section>
 
     <!-- Pagination -->
-    <!-- <div class="container mx-auto px-4 py-8 flex justify-center">
-        <div class="flex space-x-1">
-            <a href="#" class="px-3 py-1 rounded border border-gray-300 text-gray-600 hover:bg-rose-100 hover:text-rose-600">
-                <i class="fas fa-chevron-left text-xs"></i>
+    <div class="container mx-auto px-4 pb-16 flex justify-center">
+        <div class="inline-flex rounded-md shadow-sm">
+            <a href="#" class="px-4 py-2 rounded-l-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-50">
+                <i class="fas fa-chevron-left text-xs mr-2"></i>
+                Previous
             </a>
-            <a href="#" class="px-3 py-1 rounded border border-rose-500 bg-rose-500 text-white">1</a>
-            <a href="#" class="px-3 py-1 rounded border border-gray-300 text-gray-600 hover:bg-rose-100 hover:text-rose-600">2</a>
-            <a href="#" class="px-3 py-1 rounded border border-gray-300 text-gray-600 hover:bg-rose-100 hover:text-rose-600">3</a>
-            <span class="px-3 py-1 text-gray-600">...</span>
-            <a href="#" class="px-3 py-1 rounded border border-gray-300 text-gray-600 hover:bg-rose-100 hover:text-rose-600">10</a>
-            <a href="#" class="px-3 py-1 rounded border border-gray-300 text-gray-600 hover:bg-rose-100 hover:text-rose-600">
-                <i class="fas fa-chevron-right text-xs"></i>
+            <a href="#" class="px-4 py-2 border-t border-b border-gray-300 bg-rose-500 text-white">1</a>
+            <a href="#" class="px-4 py-2 border-t border-b border-gray-300 bg-white text-gray-700 hover:bg-gray-50">2</a>
+            <a href="#" class="px-4 py-2 border-t border-b border-gray-300 bg-white text-gray-700 hover:bg-gray-50">3</a>
+            <span class="px-2 py-2 border-t border-b border-gray-300 bg-white text-gray-700">...</span>
+            <a href="#" class="px-4 py-2 border-t border-b border-gray-300 bg-white text-gray-700 hover:bg-gray-50">10</a>
+            <a href="#" class="px-4 py-2 rounded-r-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-50">
+                Next
+                <i class="fas fa-chevron-right text-xs ml-2"></i>
             </a>
         </div>
-    </div> -->
+    </div>
 
-    <!-- Footer
-    <footer class="bg-gray-900 text-gray-300 py-10">
+    <!-- Newsletter Section -->
+    <section class="bg-gradient-to-r from-rose-100 to-pink-100 py-16 mb-16">
         <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div class="max-w-2xl mx-auto text-center">
+                <h3 class="text-3xl font-bold text-gray-900 mb-4">Join Our Newsletter</h3>
+                <p class="text-gray-700 mb-8">Subscribe to receive updates, access to exclusive deals, and more.</p>
+                <form class="flex flex-col sm:flex-row gap-2 max-w-lg mx-auto">
+                    <input type="email" placeholder="Enter your email address" class="flex-1 px-4 py-3 rounded-lg border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-rose-400 focus:border-transparent">
+                    <button type="submit" class="bg-rose-600 text-white px-6 py-3 rounded-lg hover:bg-rose-700 transition-colors shadow-md font-medium">
+                        Subscribe Now
+                    </button>
+                </form>
+                <p class="text-xs text-gray-600 mt-4">By subscribing, you agree to our Privacy Policy and consent to receive updates from our company.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-300 py-16">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
                 <div>
-                    <h3 class="text-xl font-bold text-white mb-4">VEYRA</h3>
-                    <p class="text-sm mb-4">Premium fashion and lifestyle products for the modern consumer.</p>
+                    <h3 class="text-2xl font-bold text-white mb-4">VEYRA<span class="text-rose-400">.co</span></h3>
+                    <p class="text-sm mb-6">Premium fashion and lifestyle products for the modern consumer.</p>
                     <div class="flex space-x-4">
-                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <a href="#" class="bg-gray-800 hover:bg-rose-600 w-10 h-10 rounded-full flex items-center justify-center transition-colors">
                             <i class="fab fa-facebook-f"></i>
                         </a>
-                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <a href="#" class="bg-gray-800 hover:bg-rose-600 w-10 h-10 rounded-full flex items-center justify-center transition-colors">
                             <i class="fab fa-twitter"></i>
                         </a>
-                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <a href="#" class="bg-gray-800 hover:bg-rose-600 w-10 h-10 rounded-full flex items-center justify-center transition-colors">
                             <i class="fab fa-instagram"></i>
                         </a>
-                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <a href="#" class="bg-gray-800 hover:bg-rose-600 w-10 h-10 rounded-full flex items-center justify-center transition-colors">
                             <i class="fab fa-pinterest"></i>
                         </a>
                     </div>
                 </div>
                 <div>
-                    <h4 class="text-white font-medium mb-4">Shop</h4>
-                    <ul class="space-y-2 text-sm">
-                        <li><a href="#" class="hover:text-rose-400 transition-colors">Men's Clothing</a></li>
-                        <li><a href="#" class="hover:text-rose-400 transition-colors">Women's Clothing</a></li>
-                        <li><a href="#" class="hover:text-rose-400 transition-colors">Jewelry</a></li>
-                        <li><a href="#" class="hover:text-rose-400 transition-colors">Electronics</a></li>
+                    <h4 class="text-white font-medium mb-4 uppercase tracking-wider">Shop</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="#" class="hover:text-rose-400 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2 text-rose-400"></i>Men's Clothing</a></li>
+                        <li><a href="#" class="hover:text-rose-400 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2 text-rose-400"></i>Women's Clothing</a></li>
+                        <li><a href="#" class="hover:text-rose-400 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2 text-rose-400"></i>Jewelry</a></li>
+                        <li><a href="#" class="hover:text-rose-400 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2 text-rose-400"></i>Electronics</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="text-white font-medium mb-4">Information</h4>
-                    <ul class="space-y-2 text-sm">
-                        <li><a href="#" class="hover:text-rose-400 transition-colors">About Us</a></li>
-                        <li><a href="#" class="hover:text-rose-400 transition-colors">Contact Us</a></li>
-                        <li><a href="#" class="hover:text-rose-400 transition-colors">Terms & Conditions</a></li>
-                        <li><a href="#" class="hover:text-rose-400 transition-colors">Returns & Exchanges</a></li>
-                        <li><a href="#" class="hover:text-rose-400 transition-colors">Shipping & Delivery</a></li>
+                    <h4 class="text-white font-medium mb-4 uppercase tracking-wider">Information</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="#" class="hover:text-rose-400 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2 text-rose-400"></i>About Us</a></li>
+                        <li><a href="#" class="hover:text-rose-400 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2 text-rose-400"></i>Contact Us</a></li>
+                        <li><a href="#" class="hover:text-rose-400 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2 text-rose-400"></i>Terms & Conditions</a></li>
+                        <li><a href="#" class="hover:text-rose-400 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2 text-rose-400"></i>Returns & Exchanges</a></li>
+                        <li><a href="#" class="hover:text-rose-400 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2 text-rose-400"></i>Shipping & Delivery</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="text-white font-medium mb-4">Newsletter</h4>
-                    <p class="text-sm mb-4">Subscribe to receive updates, access to exclusive deals, and more.</p>
-                    <form class="flex">
-                        <input type="email" placeholder="Enter your email" class="w-full bg-gray-800 border-gray-700 rounded-l px-3 py-2 focus:outline-none focus:ring-1 focus:ring-rose-400 text-sm">
-                        <button class="bg-rose-600 text-white px-3 py-2 rounded-r hover:bg-rose-700 transition-colors">
-                            <i class="fas fa-paper-plane"></i>
-                        </button>
-                    </form>
+                    <h4 class="text-white font-medium mb-4 uppercase tracking-wider">Contact Us</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt mt-1 mr-3 text-rose-400"></i>
+                            <span>123 Fashion Street, New York, NY 10001</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-phone-alt mr-3 text-rose-400"></i>
+                            <span>+1 (555) 123-4567</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-envelope mr-3 text-rose-400"></i>
+                            <span>support@veyra.co</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-clock mr-3 text-rose-400"></i>
+                            <span>Mon-Fri: 9:00 AM - 6:00 PM</span>
+                        </li>
+                    </ul>
                 </div>
             </div>
-            <div class="border-t border-gray-800 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center">
+            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
                 <p class="text-sm">&copy; 2025 VEYRA. All rights reserved.</p>
                 <div class="flex space-x-4 mt-4 md:mt-0">
                     <img src="./images/payment-visa.svg" alt="Visa" class="h-6">
@@ -203,6 +353,11 @@
                 </div>
             </div>
         </div>
-    </footer> -->
+    </footer>
+    
+    <!-- Back to top button -->
+    <a href="#" class="fixed bottom-6 right-6 bg-rose-600 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg hover:bg-rose-700 transition-colors">
+        <i class="fas fa-chevron-up"></i>
+    </a>
 </body>
 </html>
