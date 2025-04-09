@@ -57,7 +57,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 } else {
                     $_SESSION['error'] = "Database error: " . mysqli_error($conn);
                     header("Location: Signup.php");
-                    exit();
+                    } else {
+                        $_SESSION['error'] = "Database error: " . mysqli_error($conn);
+                        header("Location: Signup.php");
+                    }
                 }
             } else {
                 $_SESSION['error'] = "Database error: " . mysqli_error($conn);
