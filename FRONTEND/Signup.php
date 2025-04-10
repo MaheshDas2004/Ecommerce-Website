@@ -46,7 +46,7 @@ session_start();
                     
                     <!-- Verify Button -->
                     <button type="submit" name="verify_otp" value="1"
-                        class="w-full bg-stone-700 hover:bg-stone-800 text-white font-medium py-2 px-4 rounded-md transition duration-300 ease-in-out mb-4">
+                        class="w-full bg-stone-700 hover:bg-stone-800 text-white font-medium py-2 px-4 rounded-md transition duration-300 ease-in-out mb-4 cursor-pointer">
                         Verify
                     </button>
                     
@@ -93,7 +93,7 @@ session_start();
                     
                     <!-- Sign Up Button -->
                     <button type="submit" name="register" value="1"
-                        class="w-full bg-stone-700 hover:bg-stone-800 text-white font-medium py-2 px-4 rounded-md transition duration-300 ease-in-out mb-6">
+                        class="w-full bg-stone-700 hover:bg-stone-800 text-white font-medium py-2 px-4 rounded-md transition duration-300 ease-in-out mb-6 cursor-pointer">
                         Create your account
                     </button>
                     

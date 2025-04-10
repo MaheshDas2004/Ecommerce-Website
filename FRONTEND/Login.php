@@ -54,6 +54,12 @@
             <h1 class="text-2xl font-semibold mb-6 text-stone-800">Sign In</h1>
             
             <form method="post" class="space-y-6">
+                <?php if(isset($error)): ?>
+                    <div class="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md">
+                        <p class="text-sm"><?php echo htmlspecialchars($error); ?></p>
+                    </div>
+                <?php endif; ?>
+
                 <!-- Email Field -->
                 <div>
                     <label for="email" class="block text-sm font-medium mb-1 text-stone-700">Email address</label>
