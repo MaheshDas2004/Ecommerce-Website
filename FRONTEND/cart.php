@@ -134,7 +134,7 @@
                             <span class="text-gray-600">Delivery Fee</span>
                             <span class="text-green-600">Free <span class="line-through text-gray-400 text-sm">₹99.00</span></span>
                         </div>
-                        <div id="couponDiscount" class="flex justify-between text-green-600 hidden">
+                        <div id="couponDiscount" class=" justify-between text-green-600 hidden">
                             <span>Coupon discount</span>
                             <span id="couponDiscountValue">-₹0.00</span>
                         </div>

@@ -106,13 +106,23 @@ session_start();
                 
                 }
             ?>
-                
-            <a href="index.php?page=cart" class="text-gray-700 hover:text-black flex text-xl items-center" aria-label="Cart">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                </svg>
-                (0)
-            </a>
+            <?php
+                if((isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true)){
+                    echo '<a href="index.php?page=cart" class="text-gray-700 hover:text-black flex text-xl items-center" aria-label="Cart">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                    </svg>(0)';
+                    echo'</a>';
+                }
+                else{
+                    echo '<a href="Login.php" class="text-gray-700 hover:text-black flex text-xl items-center" aria-label="Cart">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                    </svg>(0)';
+                    echo'</a>';
+
+                }
+            ?>
 
             <a href="#" class="text-gray-700 hover:text-black" aria-label="Search" id="search-toggle">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
