@@ -1,3 +1,20 @@
+<?php
+ include '../Backend/config.php';
+ $user_id = $_SESSION['user_id'];
+ $sql= "SELECT id, user_id ,product_id, order_status,created_at FROM orders WHERE user_id = $user_id ORDER BY created_at DESC LIMIT 5";
+ $result = mysqli_query($conn, $sql);
+    if (!$result) {
+        die("Query failed: " . mysqli_error($conn));
+    }
+    
+    $orders =[];
+    if (mysqli_num_rows($result) > 0) {
+        while ($row = mysqli_fetch_assoc($result)) {
+            $orders[] = $row;
+        }
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -41,7 +58,21 @@
                     </div>
                 </div>
                 
-                <h2 class="text-xl font-semibold text-center mb-8">John Doe</h2>
+                <h2 class="text-xl font-semibold text-center mb-8"><?php 
+                    if (isset($_SESSION['email'])) {
+                        $sql= "SELECT name FROM users WHERE Email = ?";
+                        $stmt = mysqli_prepare($conn, $sql);
+                        mysqli_stmt_bind_param($stmt, "s", $_SESSION['email']);
+                        mysqli_stmt_execute($stmt);
+                        $result = mysqli_stmt_get_result($stmt);
+                        if ($result && mysqli_num_rows($result) > 0) {
+                            $row = mysqli_fetch_assoc($result);
+                            echo htmlspecialchars($row['name']);
+                        } else {
+                            echo "User";
+                        }
+                    }
+                ?></h2>
                 
                 <ul class="list-none">
                     <li class="mb-4 pb-4 border-b border-gray-100 last:border-b-0 last:mb-0 last:pb-0">
@@ -59,18 +90,6 @@
                     <li class="mb-4 pb-4 border-b border-gray-100 last:border-b-0 last:mb-0 last:pb-0">
                         <a href="#" class="flex items-center justify-between no-underline text-gray-800 font-medium transition hover:text-gray-500">
                             <span>Address Book</span>
-                            <span class="text-sm transition-transform group-hover:translate-x-1">›</span>
-                        </a>
-                    </li>
-                    <li class="mb-4 pb-4 border-b border-gray-100 last:border-b-0 last:mb-0 last:pb-0">
-                        <a href="#" class="flex items-center justify-between no-underline text-gray-800 font-medium transition hover:text-gray-500">
-                            <span>Payment Methods</span>
-                            <span class="text-sm transition-transform group-hover:translate-x-1">›</span>
-                        </a>
-                    </li>
-                    <li class="mb-4 pb-4 border-b border-gray-100 last:border-b-0 last:mb-0 last:pb-0">
-                        <a href="#" class="flex items-center justify-between no-underline text-gray-800 font-medium transition hover:text-gray-500">
-                            <span>Wishlist</span>
                             <span class="text-sm transition-transform group-hover:translate-x-1">›</span>
                         </a>
                     </li>
@@ -115,8 +134,7 @@
                     <div class="flex flex-wrap mb-4">
                         <div class="w-38 font-medium text-gray-600 mr-5">Email</div>
                         <div class="flex-1 min-w-[200px] text-gray-800">
-                            john.doe@example.com
-                            <a href="#" class="text-gray-500 text-sm ml-3 transition-colors hover:text-gray-700">Edit</a>
+                            <?php echo $_SESSION['email']; ?>
                         </div>
                     </div>
                     
@@ -124,14 +142,7 @@
                         <div class="w-38 font-medium text-gray-600 mr-5">Phone Number</div>
                         <div class="flex-1 min-w-[200px] text-gray-800">+1 234 567 8901</div>
                     </div>
-                    
-                    <div class="flex flex-wrap mb-4">
-                        <div class="w-38 font-medium text-gray-600 mr-5">Date of Birth</div>
-                        <div class="flex-1 min-w-[200px] text-gray-800">January 1, 1980</div>
-                    </div>
-                    
-                    <a href="#" class="inline-block mt-5 text-sm text-gray-800 transition-colors hover:text-gray-500">Change password</a>
-                </div>
+                                    </div>
                 
                 <!-- Recent Orders Card -->
                 <div class="bg-white rounded-lg shadow-md p-8 mb-8 sm:p-5">
@@ -142,59 +153,33 @@
                             <tr>
                                 <th class="text-left py-4 px-3 font-medium text-gray-600 border-b border-gray-100">Order</th>
                                 <th class="text-left py-4 px-3 font-medium text-gray-600 border-b border-gray-100 md:table-cell sm:hidden">Date</th>
-                                <th class="text-left py-4 px-3 font-medium text-gray-600 border-b border-gray-100 sm:hidden">Status</th>
+                                <th class="text-left py-4 px-3 font-medium text-gray-600 border-b border-gray-100 sm:hidden md:table-cell">Status</th>
                                 <th class="text-left py-4 px-3 font-medium text-gray-600 border-b border-gray-100">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td class="py-4 px-3 border-b border-gray-100 font-medium text-gray-800">Order #12345</td>
-                                <td class="py-4 px-3 border-b border-gray-100 md:table-cell sm:hidden">April 20, 2024</td>
-                                <td class="py-4 px-3 border-b border-gray-100 sm:hidden">
-                                    <span class="inline-block py-1 px-3 rounded-full bg-soft-pink text-gray-800 text-xs font-medium">Processing</span>
+                            <?php foreach($orders as $order){ ?>
+                                <tr>
+                                <td class="py-4 px-3 border-b border-gray-100 font-medium text-gray-800">Order: <?php echo $order['id']?></td>
+                                <td class="py-4 px-3 border-b border-gray-100 md:table-cell sm:hidden">
+                                    <?php echo date('j M Y', strtotime($order['created_at'])); ?>
+                                </td>
+
+                                <td class="py-4 px-3 border-b border-gray-100 sm:hidden md:table-cell">
+                                    <?php echo $order['order_status']; ?>
                                 </td>
                                 <td class="py-4 px-3 border-b border-gray-100">
-                                    <a href="#" class="inline-block px-4 py-2 rounded border border-gray-800 text-gray-800 text-sm font-medium no-underline transition-all hover:bg-gray-800 hover:text-white">
+                                    <form action="">
+                                        <input type="hidden" name="order_id" value="<?php echo $order['id']?>">
+                                        <input type="hidden" name="user_id" value="<?php echo $user_id?>">
+                                        <button action="" class="inline-block px-4 py-2 rounded border border-gray-800 text-gray-800 text-sm font-medium no-underline transition-all hover:bg-gray-800 hover:text-white">
                                         View Order
-                                    </a>
+                                    </button>
+                                    </form>
+                                    
                                 </td>
                             </tr>
-                            <tr>
-                                <td class="py-4 px-3 border-b border-gray-100 font-medium text-gray-800">Order #12345</td>
-                                <td class="py-4 px-3 border-b border-gray-100 md:table-cell sm:hidden">April 20, 2024</td>
-                                <td class="py-4 px-3 border-b border-gray-100 sm:hidden">
-                                    <span class="inline-block py-1 px-3 rounded-full bg-soft-pink text-gray-800 text-xs font-medium">Processing</span>
-                                </td>
-                                <td class="py-4 px-3 border-b border-gray-100">
-                                    <a href="#" class="inline-block px-4 py-2 rounded border border-gray-800 text-gray-800 text-sm font-medium no-underline transition-all hover:bg-gray-800 hover:text-white">
-                                        View Order
-                                    </a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="py-4 px-3 border-b border-gray-100 font-medium text-gray-800">Order #12345</td>
-                                <td class="py-4 px-3 border-b border-gray-100 md:table-cell sm:hidden">April 20, 2024</td>
-                                <td class="py-4 px-3 border-b border-gray-100 sm:hidden">
-                                    <span class="inline-block py-1 px-3 rounded-full bg-soft-pink text-gray-800 text-xs font-medium">Processing</span>
-                                </td>
-                                <td class="py-4 px-3 border-b border-gray-100">
-                                    <a href="#" class="inline-block px-4 py-2 rounded border border-gray-800 text-gray-800 text-sm font-medium no-underline transition-all hover:bg-gray-800 hover:text-white">
-                                        View Order
-                                    </a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="py-4 px-3 border-b border-gray-100 last:border-b-0 font-medium text-gray-800">Order #12345</td>
-                                <td class="py-4 px-3 border-b border-gray-100 last:border-b-0 md:table-cell sm:hidden">April 20, 2024</td>
-                                <td class="py-4 px-3 border-b border-gray-100 last:border-b-0 sm:hidden">
-                                    <span class="inline-block py-1 px-3 rounded-full bg-soft-pink text-gray-800 text-xs font-medium">Processing</span>
-                                </td>
-                                <td class="py-4 px-3 border-b border-gray-100 last:border-b-0">
-                                    <a href="#" class="inline-block px-4 py-2 rounded border border-gray-800 text-gray-800 text-sm font-medium no-underline transition-all hover:bg-gray-800 hover:text-white">
-                                        View Order
-                                    </a>
-                                </td>
-                            </tr>
+                            <?php } ?>
                         </tbody>
                     </table>
                 </div>

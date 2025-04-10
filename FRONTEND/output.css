@@ -1914,6 +1914,11 @@
       display: none;
     }
   }
+  .md\:table {
+    @media (width >= 48rem) {
+      display: table;
+    }
+  }
   .md\:table-cell {
     @media (width >= 48rem) {
       display: table-cell;
