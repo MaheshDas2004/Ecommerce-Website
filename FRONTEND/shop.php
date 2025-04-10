@@ -241,10 +241,14 @@
                         </div>
                         <!-- Action Buttons -->
                         <div class="flex space-x-2">
-                            <button onclick="buyNow(<?php echo $product['id']; ?>)" 
-                                    class="flex-1 bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded transition-colors">
-                                Buy Now
-                            </button>
+                            <form action="Payment.php">
+                                <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">
+                                <button onclick="" 
+                                        class="flex-1 bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded transition-colors">
+                                    Buy Now
+                                </button>
+                            </form>
+                            
                             <button onclick="addToCart(<?php echo $product['id']; ?>)" 
                                     class="flex-1 border border-indigo-500 text-indigo-500 hover:bg-indigo-50 px-4 py-2 rounded transition-colors">
                                 Add to Cart
