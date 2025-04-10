@@ -20,8 +20,12 @@
             // Verify the password against the stored hash
             if(password_verify($Password, $user['password'])) {
                 session_start();
+                $user_id = $user['Sno'];
+                $_SESSION['id'] = $user_id;  
+
                 $_SESSION['loggedin'] = true;
                 $_SESSION['email'] = $email;
+                $_SESSION['user_id'] = $user_id;
                 // Don't store the password in session
                 header("location: index.php");
                 exit();

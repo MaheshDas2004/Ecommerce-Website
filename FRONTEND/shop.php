@@ -233,7 +233,7 @@
                     <div class="flex flex-col space-y-2 mt-2">
                         <!-- Price Display -->
                         <div class="flex items-center justify-between">
-                            <span class="text-lg font-bold text-gray-900">$<?php echo number_format($product['price'], 2); ?></span>
+                            <span class="text-lg font-bold text-gray-900">₹<?php echo number_format($product['price'], 2); ?></span>
                             <button onclick="addToWishlist(<?php echo $product['id']; ?>)" 
                                     class="text-gray-400 hover:text-red-500 transition-colors">
                                 <i class="far fa-heart"></i>
