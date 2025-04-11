@@ -112,36 +112,6 @@
         </div>
     </div>
     
-    <!-- Categories Section -->
-    <section id="categories" class="container mx-auto px-4 mb-12">
-        <h2 class="section-title text-2xl md:text-3xl font-bold text-gray-800 mb-8">Shop by Category</h2>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <a href="#" class="category-pill bg-gradient-to-r from-rose-50 to-rose-100 p-4 rounded-lg shadow-sm flex flex-col items-center justify-center text-center hover:shadow-md transition-all">
-                <div class="w-16 h-16 bg-rose-200 rounded-full flex items-center justify-center mb-3">
-                    <i class="fas fa-tshirt text-rose-600 text-xl"></i>
-                </div>
-                <span class="font-medium text-gray-800">Men's Clothing</span>
-            </a>
-            <a href="#" class="category-pill bg-gradient-to-r from-purple-50 to-purple-100 p-4 rounded-lg shadow-sm flex flex-col items-center justify-center text-center hover:shadow-md transition-all">
-                <div class="w-16 h-16 bg-purple-200 rounded-full flex items-center justify-center mb-3">
-                    <i class="fas fa-female text-purple-600 text-xl"></i>
-                </div>
-                <span class="font-medium text-gray-800">Women's Clothing</span>
-            </a>
-            <a href="#" class="category-pill bg-gradient-to-r from-amber-50 to-amber-100 p-4 rounded-lg shadow-sm flex flex-col items-center justify-center text-center hover:shadow-md transition-all">
-                <div class="w-16 h-16 bg-amber-200 rounded-full flex items-center justify-center mb-3">
-                    <i class="fas fa-gem text-amber-600 text-xl"></i>
-                </div>
-                <span class="font-medium text-gray-800">Jewelry</span>
-            </a>
-            <a href="#" class="category-pill bg-gradient-to-r from-blue-50 to-blue-100 p-4 rounded-lg shadow-sm flex flex-col items-center justify-center text-center hover:shadow-md transition-all">
-                <div class="w-16 h-16 bg-blue-200 rounded-full flex items-center justify-center mb-3">
-                    <i class="fas fa-laptop text-blue-600 text-xl"></i>
-                </div>
-                <span class="font-medium text-gray-800">Electronics</span>
-            </a>
-        </div>
-    </section>
     
     <!-- Filters Section -->
     <div class="container mx-auto px-4 mb-8">
