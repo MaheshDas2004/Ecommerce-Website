@@ -373,14 +373,21 @@ if (isset($_SESSION['user_id'])) {
                         <div class="mt-2 mb-3">
                             <span class="text-gray-700">${product.price ? '$' + product.price.toFixed(2) : 'Contact for price'}</span>
                         </div>
-                        <div class="flex space-x-2 mt-3">
-                        
-                            <button onclick="addToCart(${product.id})" class="flex-1 bg-black text-white py-2 px-3 text-sm uppercase tracking-wider hover:bg-gray-800 transition-colors">
-                                Add to Cart
-                            </button>
-                            <button onclick="buyNow(${product.id})" class="flex-1 bg-rose-600 text-white py-2 px-3 text-sm uppercase tracking-wider hover:bg-rose-700 transition-colors">
+                        <div class="flex space-x-2">
+                        <form action="Payment.php" class="w-full"">
+                            <input type="hidden" name="product_id" value="${product.id}">
+                            <button type="submit" 
+                                    class="w-full bg-rose-600 text-white py-2 px-3 text-sm uppercase tracking-wider hover:bg-rose-700 transition-colors">
                                 Buy Now
                             </button>
+                        </form>
+                        <form class="w-full" action="Addtocart.php" method="post">
+                            <input type="hidden" name="product_id" value="${product.id}">
+                            <input type="hidden" name="quantity" value="1" min="1">
+                        <button  class="w-full bg-black text-white py-2 px-3 text-sm uppercase tracking-wider hover:bg-gray-800 transition-colors">
+                            Add to Cart
+                        </button>
+                        </form>
                         </div>
                     </div>
                 </div>
@@ -390,19 +397,6 @@ if (isset($_SESSION['user_id'])) {
         });
     }
 
-    
-
-    // Original cart functions
-    function addToCart(productId) {
-        console.log(`Added product ${productId} to cart`);
-        // Here you would add AJAX call to add to cart
-        alert(`Added product to cart!`);
-    }
-
-    function buyNow(productId) {
-        console.log(`Buy now for product ${productId}`);
-        window.location.href = `checkout.php?product_id=${productId}`;
-    }
 
     // Original carousel logic
     let currentIndex = 0;
