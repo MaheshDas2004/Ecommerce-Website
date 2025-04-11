@@ -3,9 +3,6 @@
         $email = $_POST['email'];
         $Password = $_POST['Password'];
         
-        // Hash the password using the same method used in signup
-        $hashedPassword = password_hash($Password, PASSWORD_DEFAULT);
-    
         include '../Backend/config.php';
     
         // First get the stored hashed password
@@ -93,7 +90,7 @@
 
             <!-- Forgot Password -->
             <div class="mt-4">
-                <a href="#" class="text-sm text-stone-600 hover:text-stone-800 hover:underline">
+                <a href="forgot_password.php" class="text-sm text-stone-600 hover:text-stone-800 hover:underline">
                     Forgot your password?
                 </a>
             </div>
