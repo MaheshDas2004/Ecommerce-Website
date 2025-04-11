@@ -213,12 +213,7 @@
                         </span>
                     </div>
                     
-                    <!-- Quick Action Buttons -->
-                    <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button class="bg-white p-1.5 rounded-full shadow-sm hover:bg-gray-50 transition-colors">
-                            <i class="far fa-heart text-gray-600 text-sm"></i>
-                        </button>
-                    </div>
+                    
                 </div>
                 
                 <!-- Product Info -->

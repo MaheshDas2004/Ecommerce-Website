@@ -74,7 +74,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     // Check input errors before creating order
     if(empty($address_err) && empty($payment_method_err)) {
         
-        // Create orders table if not exists
         
         // Prepare an insert statement
         $sql = "INSERT INTO orders (user_id, product_id, quantity, total_price, address, payment_method) VALUES (?, ?, ?, ?, ?, ?)";

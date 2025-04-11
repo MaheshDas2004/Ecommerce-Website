@@ -2,7 +2,7 @@
 include '../Backend/config.php';
 
 $userHasOrders = false;
-$recommendedProducts = array();
+$recommendedProducts = [];
 
 if (isset($_SESSION['user_id'])) {
     $userId = $_SESSION['user_id'];
@@ -78,29 +78,71 @@ if (isset($_SESSION['user_id'])) {
     </style>
 </head>
 <body>
-    <!-- Recommended Products Section (moved to top) -->
-    <div id="recommended-products" class="bg-white py-12 px-4 md:px-8 lg:px-16" style="<?= $userHasOrders ? '' : 'display: none;' ?>">
-        <div class="max-w-7xl mx-auto">
-            <!-- Section Header -->
-            <div class="flex justify-between items-center mb-8">
-                <h2 id="t2" class="text-3xl font-bold tracking-wide text-gray-900">RECOMMENDED FOR YOU</h2>
-                <a href="index.php?page=shop" class="uppercase text-sm tracking-wider text-gray-700 hover:underline">View all</a>
-            </div>
-            
-            <!-- Recommended Products Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                <!-- Products will be inserted here via JavaScript -->
-            </div>
-        </div>
-    </div>
-
-    <div class="bg-rose-100 p-16 text-center">
+<div class="bg-rose-100 p-16 text-center">
         <h1 id="t2" class="text-5xl mb-8 font-sans">New Collections</h1>
         <p class="max-w-2xl mx-auto text-gray-500 px-4">
             Discover the latest trends in our new collection. From stylish apparel to must-have accessories, find everything you need to elevate your wardrobe. Shop now and redefine your style with our exclusive range!
         </p>
     </div>
+    <div id="recommended-products" class="bg-white py-12 px-4 md:px-8 lg:px-16 container" style="<?= $userHasOrders ? '' : 'display: none;' ?>">
+    <div class="max-w-7xl mx-auto">
+        <!-- Section Header -->
+        <div class="flex justify-between items-center mb-8">
+            <h2 id="t2" class="text-3xl font-bold tracking-wide text-gray-900">RECOMMENDED FOR YOU</h2>
+            <a href="index.php?page=shop" class="uppercase text-sm tracking-wider text-gray-700 hover:underline">View all</a>
+        </div>
 
+        <!-- Recommended Products Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <?php foreach($recommendedProducts as $recm) { ?>
+    
+            <div class="p-4">
+                <div class="mb-4">
+                    <img src="<?= $recm['image'] ?>" alt="<?= $recm['title'] ?>" 
+                        class="w-full h-64 md:h-80 object-cover">
+                </div>
+                
+                <h3 class="text-sm font-medium text-gray-800 mb-1 line-clamp-2 h-10">
+                    <a href="product.php?id=<?= $recm['id'] ?>" class="hover:text-blue-600 transition-colors">
+                        <?= $recm['title'] ?>
+                    </a>
+                </h3>
+                
+                <div class="flex flex-col space-y-2 mt-2">
+                    <!-- Price Display -->
+                    <div class="flex items-center justify-between">
+                        <span class="text-lg font-bold text-gray-900">
+                            ₹<?= number_format($recm['price'], 2) ?>
+                        </span>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="flex space-x-2">
+                        <form action="Payment.php" class="w-full">
+                            <input type="hidden" name="product_id" value="<?= $recm['id'] ?>">
+                            <button type="submit" 
+                                    class="w-full bg-rose-600 text-white py-2 px-3 text-sm uppercase tracking-wider hover:bg-rose-700 transition-colors">
+                                Buy Now
+                            </button>
+                        </form>
+                        <form action="Addtocart.php" class="w-full" method="post">
+                            <input type="hidden" name="product_id" value="<?= $recm['id'] ?>">
+                            <input type="hidden" name="quantity" value="1" min="1">
+                            <button type="submit" 
+                                    class="w-full bg-black text-white py-2 px-3 text-sm uppercase tracking-wider hover:bg-gray-800 transition-colors">
+                                Add to Cart
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <?php } ?>
+        </div>
+    </div>
+</div>
+    
+
+    
     <div class="flex flex-col md:flex-row justify-between items-center px-4 md:px-20 py-10 space-y-8 md:space-y-0" style="<?= $userHasOrders ? 'display: none;' : '' ?>">
         <!-- Book An Appointment -->
         <div class="text-center w-full md:w-1/4 mx-4">
@@ -332,6 +374,7 @@ if (isset($_SESSION['user_id'])) {
                             <span class="text-gray-700">${product.price ? '$' + product.price.toFixed(2) : 'Contact for price'}</span>
                         </div>
                         <div class="flex space-x-2 mt-3">
+                        
                             <button onclick="addToCart(${product.id})" class="flex-1 bg-black text-white py-2 px-3 text-sm uppercase tracking-wider hover:bg-gray-800 transition-colors">
                                 Add to Cart
                             </button>
@@ -347,40 +390,7 @@ if (isset($_SESSION['user_id'])) {
         });
     }
 
-    // Modified Recommended Products display
-    function displayRecommendedProducts() {
-        const recommendedSection = document.getElementById('recommended-products');
-        const container = recommendedSection.querySelector('.grid');
-        container.innerHTML = '';
-        
-        if (!userHasOrders || recommendedProducts.length === 0) {
-            recommendedSection.style.display = 'none';
-            return;
-        }
-        
-        recommendedProducts.forEach(product => {
-            const productCard = document.createElement('div');
-            productCard.innerHTML = `
-                <div>
-                    <div class="mb-4">
-                        <img src="${product.image}" alt="${product.name}" 
-                            class="w-full h-64 md:h-80 object-cover">
-                    </div>
-                    <h3 class="text-gray-900 font-medium">${product.title}</h3>
-                    <p class="text-gray-700 mt-1 mb-3">$${parseFloat(product.price).toFixed(2)}</p>
-                    <div class="flex space-x-2 mt-3">
-                        <button onclick="addToCart(${product.id})" class="flex-1 bg-black text-white py-2 px-3 text-sm uppercase tracking-wider hover:bg-gray-800 transition-colors">
-                            Add to Cart
-                        </button>
-                        <button onclick="buyNow(${product.id})" class="flex-1 bg-rose-600 text-white py-2 px-3 text-sm uppercase tracking-wider hover:bg-rose-700 transition-colors">
-                            Buy Now
-                        </button>
-                    </div>
-                </div>
-            `;
-            container.appendChild(productCard);
-        });
-    }
+    
 
     // Original cart functions
     function addToCart(productId) {
