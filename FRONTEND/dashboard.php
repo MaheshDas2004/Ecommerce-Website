@@ -42,13 +42,14 @@ if (isset($_SESSION['user_id'])) {
                 mysqli_stmt_close($stmt);
                 
                 // Get recommended products
-                $stmt = mysqli_prepare($conn, "SELECT id, title, price, image, category FROM products WHERE category = ? AND id != ? LIMIT 4");
+                $stmt = mysqli_prepare($conn, "SELECT id, title, price, image, category FROM products WHERE category = ? AND id != ? Order by RAND()LIMIT 4");
                 mysqli_stmt_bind_param($stmt, "si", $category, $productId);
                 mysqli_stmt_execute($stmt);
                 $result = mysqli_stmt_get_result($stmt);
                 $recommendedProducts = mysqli_fetch_all($result, MYSQLI_ASSOC);
                 mysqli_stmt_close($stmt);
             }
+            shuffle($recommendedProducts);
         }
     }
 }
@@ -307,40 +308,9 @@ if (isset($_SESSION['user_id'])) {
             }
         ];
         
-        // Recommended products data
-        const recommendedProducts = [
-            {
-                id: 101,
-                name: "Leather Biker Jacket",
-                price: 120.00,
-                image: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-                category: "men"
-            },
-            {
-                id: 102,
-                name: "Floral Summer Dress",
-                price: 85.00,
-                image: "https://images.unsplash.com/photo-1551232864-3f0890e580d9?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-                category: "women"
-            },
-            {
-                id: 103,
-                name: "Classic White Sneakers",
-                price: 79.99,
-                image: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-                category: "accessories"
-            },
-            {
-                id: 104,
-                name: "Slim Fit Denim Jeans",
-                price: 65.00,
-                image: "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-                category: "men"
-            }
-        ];
         
         const userHasOrders = <?= $userHasOrders ? 'true' : 'false' ?>;
-    // const recommendedProducts = <?= json_encode($recommendedProducts) ?>;
+    const recommendedProducts = <?= json_encode($recommendedProducts) ?>;
 
     // Display New Arrivals products function (original)
     function displayProducts() {
@@ -396,7 +366,7 @@ if (isset($_SESSION['user_id'])) {
                         <img src="${product.image}" alt="${product.name}" 
                             class="w-full h-64 md:h-80 object-cover">
                     </div>
-                    <h3 class="text-gray-900 font-medium">${product.name}</h3>
+                    <h3 class="text-gray-900 font-medium">${product.title}</h3>
                     <p class="text-gray-700 mt-1 mb-3">$${parseFloat(product.price).toFixed(2)}</p>
                     <div class="flex space-x-2 mt-3">
                         <button onclick="addToCart(${product.id})" class="flex-1 bg-black text-white py-2 px-3 text-sm uppercase tracking-wider hover:bg-gray-800 transition-colors">

@@ -1,5 +1,4 @@
 <?php
-    // include '../Backend/api.php';
     include '../Backend/config.php';
     $sql = "SELECT id, title, price, description, category, image, rating_rate, rating_count FROM products";
     $result = mysqli_query($conn, $sql);
@@ -10,6 +9,8 @@
         while ($row = mysqli_fetch_assoc($result)) {
             $products[] = $row;
         }
+        // Shuffle the array after collecting all results
+        shuffle($products);
     }
 
     // Helper function to format ratings display
@@ -222,9 +223,9 @@
                 
                 <!-- Product Info -->
                 <div class="p-4">
-                    <div class="flex items-center text-amber-400 text-xs mb-1">
+                    <!-- <div class="flex items-center text-amber-400 text-xs mb-1">
                         <?php echo formatRating($product['rating_rate'], $product['rating_count']); ?>
-                    </div>
+                    </div> -->
                     <h3 class="text-sm font-medium text-gray-800 mb-1 line-clamp-2 h-10">
                         <a href="product.php?id=<?php echo $product['id']; ?>" class="hover:text-blue-600 transition-colors">
                             <?php echo $product['title']; ?>
@@ -234,23 +235,20 @@
                         <!-- Price Display -->
                         <div class="flex items-center justify-between">
                             <span class="text-lg font-bold text-gray-900">₹<?php echo number_format($product['price'], 2); ?></span>
-                            <button onclick="addToWishlist(<?php echo $product['id']; ?>)" 
-                                    class="text-gray-400 hover:text-red-500 transition-colors">
-                                <i class="far fa-heart"></i>
-                            </button>
+                            
                         </div>
                         <!-- Action Buttons -->
                         <div class="flex space-x-2">
-                            <form action="Payment.php">
+                            <form action="Payment.php" class="w-full">
                                 <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">
-                                <button onclick="" 
-                                        class="flex-1 bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded transition-colors">
+                                <button type="submit" 
+                                        class="w-full bg-rose-600 text-white py-2 px-3 text-sm uppercase tracking-wider hover:bg-rose-700 transition-colors">
                                     Buy Now
                                 </button>
                             </form>
                             
                             <button onclick="addToCart(<?php echo $product['id']; ?>)" 
-                                    class="flex-1 border border-indigo-500 text-indigo-500 hover:bg-indigo-50 px-4 py-2 rounded transition-colors">
+                                    class="w-full bg-black text-white py-2 px-3 text-sm uppercase tracking-wider hover:bg-gray-800 transition-colors">
                                 Add to Cart
                             </button>
                         </div>
@@ -261,24 +259,6 @@
         </div>
     </section>
 
-    <!-- Pagination -->
-    <div class="container mx-auto px-4 pb-16 flex justify-center">
-        <div class="inline-flex rounded-md shadow-sm">
-            <a href="#" class="px-4 py-2 rounded-l-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-50">
-                <i class="fas fa-chevron-left text-xs mr-2"></i>
-                Previous
-            </a>
-            <a href="#" class="px-4 py-2 border-t border-b border-gray-300 bg-rose-500 text-white">1</a>
-            <a href="#" class="px-4 py-2 border-t border-b border-gray-300 bg-white text-gray-700 hover:bg-gray-50">2</a>
-            <a href="#" class="px-4 py-2 border-t border-b border-gray-300 bg-white text-gray-700 hover:bg-gray-50">3</a>
-            <span class="px-2 py-2 border-t border-b border-gray-300 bg-white text-gray-700">...</span>
-            <a href="#" class="px-4 py-2 border-t border-b border-gray-300 bg-white text-gray-700 hover:bg-gray-50">10</a>
-            <a href="#" class="px-4 py-2 rounded-r-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-50">
-                Next
-                <i class="fas fa-chevron-right text-xs ml-2"></i>
-            </a>
-        </div>
-    </div>
 
     <!-- Newsletter Section -->
     <section class="bg-gradient-to-r from-rose-100 to-pink-100 py-16 mb-16">
