@@ -78,16 +78,16 @@ if (isset($_SESSION['user_id'])) {
     </style>
 </head>
 <body>
-<div class="bg-rose-100 p-16 text-center">
+    <div class="bg-rose-100 p-16 text-center">
         <h1 id="t2" class="text-5xl mb-8 font-sans">New Collections</h1>
         <p class="max-w-2xl mx-auto text-gray-500 px-4">
             Discover the latest trends in our new collection. From stylish apparel to must-have accessories, find everything you need to elevate your wardrobe. Shop now and redefine your style with our exclusive range!
         </p>
     </div>
-    <div id="recommended-products" class="bg-white py-12 px-4 md:px-8 lg:px-16 container" style="<?= $userHasOrders ? '' : 'display: none;' ?>">
-    <div class="max-w-7xl mx-auto">
+    <div id="recommended-products" class="bg-white  px-4 md:px-8 lg:px-4 container mx-auto py-8" style="<?= $userHasOrders ? '' : 'display: none;' ?>">
+    <div class="max-w-full mx-auto">
         <!-- Section Header -->
-        <div class="flex justify-between items-center mb-8">
+        <div class="flex justify-between items-center mb-6">
             <h2 id="t2" class="text-3xl font-bold tracking-wide text-gray-900">RECOMMENDED FOR YOU</h2>
             <a href="index.php?page=shop" class="uppercase text-sm tracking-wider text-gray-700 hover:underline">View all</a>
         </div>
@@ -309,7 +309,7 @@ if (isset($_SESSION['user_id'])) {
             {
                 id: 1,
                 name: "DARK FLORISH ONEPIECE",
-                price: null, // No price displayed, only "ADD TO CART"
+                price: 250.00,
                 image: "https://images.unsplash.com/photo-1621184455862-c163dfb30e0f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
                 category: "women"
             },
@@ -368,7 +368,6 @@ if (isset($_SESSION['user_id'])) {
                     <img src="${product.image}" alt="${product.name}" 
                         class="w-full h-96 object-cover mb-4">
                     
-                    <div class="text-center">
                         <h3 class="text-lg font-medium text-gray-900">${product.name}</h3>
                         <div class="mt-2 mb-3">
                             <span class="text-gray-700">${product.price ? '$' + product.price.toFixed(2) : 'Contact for price'}</span>
@@ -389,7 +388,6 @@ if (isset($_SESSION['user_id'])) {
                         </button>
                         </form>
                         </div>
-                    </div>
                 </div>
             `;
             
