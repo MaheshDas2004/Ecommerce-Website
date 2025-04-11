@@ -100,7 +100,6 @@ if (isset($_SESSION['user_id'])) {
         </p>
     </div>
 
-    <!-- Features Section (moved to bottom) -->
     <div class="flex flex-col md:flex-row justify-between items-center px-4 md:px-20 py-10 space-y-8 md:space-y-0" style="<?= $userHasOrders ? 'display: none;' : '' ?>">
         <!-- Book An Appointment -->
         <div class="text-center w-full md:w-1/4 mx-4">
@@ -259,59 +258,7 @@ if (isset($_SESSION['user_id'])) {
     </div>
 
 
-    <div class="bg-rose-100 p-16 text-center">
-        <h1 id="t2" class="text-5xl mb-8 font-sans">New Collections</h1>
-        <p class="max-w-2xl mx-auto text-gray-500 px-4">
-            Discover the latest trends in our new collection. From stylish apparel to must-have accessories, find everything you need to elevate your wardrobe. Shop now and redefine your style with our exclusive range!
-        </p>
-    </div>
-
-    <!-- Features Section (moved to bottom) -->
-    <div class="flex flex-col md:flex-row justify-between items-center px-4 md:px-20 py-10 space-y-8 md:space-y-0">
-        <!-- Book An Appointment -->
-        <div class="text-center w-full md:w-1/4 mx-4">
-            <div class="flex justify-center mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-            </div>
-            <h1 id="t2" class="text-xl font-bold mb-2">Book An Appointment</h1>
-            <p class="text-gray-500 text-sm">Discover a seamless shopping experience tailored to your needs. Schedule a personalized session with our fashion experts today!</p>
-        </div>
-
-        <!-- Pick Up In Store -->
-        <div class="text-center w-full md:w-1/4 mx-4">
-            <div class="flex justify-center mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                </svg>
-            </div>
-            <h1 class="text-xl font-bold mb-2">Pick Up In Store</h1>
-            <p class="text-gray-500 text-sm">Enjoy the convenience of picking up your curated fashion pieces at your nearest store. Shop effortlessly today!</p>
-        </div>
-
-        <!-- Special Packaging -->
-        <div class="text-center w-full md:w-1/4 mx-4">
-            <div class="flex justify-center mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10" />
-                </svg>
-            </div>
-            <h1 class="text-xl font-bold mb-2">Special Packaging</h1>
-            <p class="text-gray-500 text-sm">Make your gifts unforgettable with our exclusive packaging options. Perfect for every special occasion!</p>
-        </div>
-
-        <!-- Free Global Returns -->
-        <div class="text-center w-full md:w-1/4 mx-4">
-            <div class="flex justify-center mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                </svg>
-            </div>
-            <h1 class="text-xl font-bold mb-2">Free Global Returns</h1>
-            <p class="text-gray-500 text-sm">Shop with confidence knowing you can return your fashion finds effortlessly, no matter where you are!</p>
-        </div>
-    </div>
+    
 
     <script>
         // Product data
