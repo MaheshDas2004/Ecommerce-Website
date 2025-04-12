@@ -28,6 +28,7 @@
     <link rel="stylesheet" href="./output.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../output.css.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap');
         
@@ -208,11 +209,14 @@
                                     Buy Now
                                 </button>
                             </form>
-                            
-                            <button onclick="addToCart(<?php echo $product['id']; ?>)" 
+                            <form action="Addtocart.php" class="w-full" method="post">
+                            <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">
+                            <input type="hidden" name="quantity" value="1">
+                            <button type="submit"
                                     class="w-full bg-black text-white py-2 px-3 text-sm uppercase tracking-wider hover:bg-gray-800 transition-colors">
                                 Add to Cart
                             </button>
+                            </form>
                         </div>
                     </div>
                 </div>
