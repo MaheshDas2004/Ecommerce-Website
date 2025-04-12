@@ -27,51 +27,7 @@ $order = [];
 $product = [];
 
 // Get the order details
-if(isset($_GET["order_id"])) {
-    $order_id = trim($_GET["order_id"]);
-    
-    // Prepare a select statement
-    $sql = "SELECT * FROM orders WHERE id = ? AND user_id = ?";
-    
-    if($stmt = $conn->prepare($sql)) {
-        // Bind variables to the prepared statement as parameters
-        $stmt->bind_param("ii", $param_id, $param_user_id);
-        
-        // Set parameters
-        $param_id = $order_id;
-        $param_user_id = $user_id;
-        
-        // Attempt to execute the prepared statement
-        if($stmt->execute()) {
-            $result = $stmt->get_result();
-            
-            if($result->num_rows == 1) {
-                $order = $result->fetch_array(MYSQLI_ASSOC);
-                
-                // Get product details
-                $sql = "SELECT * FROM products WHERE id = ?";
-                $stmt = $conn->prepare($sql);
-                $stmt->bind_param("i", $order["product_id"]);
-                $stmt->execute();
-                $result = $stmt->get_result();
-                $product = $result->fetch_array(MYSQLI_ASSOC);
-            } else {
-                // Order not found
-                header("location: error.php");
-                exit();
-            }
-        } else {
-            echo "Oops! Something went wrong. Please try again later.";
-        }
 
-        // Close statement
-        $stmt->close();
-    }
-} else {
-    // No order ID provided
-    header("location: shop.php");
-    exit();
-}
 
 // Close connection
 $conn->close();

@@ -1,3 +1,98 @@
+<?php
+include '../Backend/config.php';
+if(!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+    header("Location: login.php");
+    exit();
+} else {
+    $user_id = $_SESSION['user_id'];
+    
+    // Get active cart for this user
+    $cart_sql = "SELECT cart_id FROM cart WHERE user_id = '$user_id' AND status = 'active'";
+    $cart_result = mysqli_query($conn, $cart_sql);
+    
+    $cart_items = [];
+    $cart_id = 0;
+    
+    if (mysqli_num_rows($cart_result) > 0) {
+        $cart_row = mysqli_fetch_assoc($cart_result);
+        $cart_id = $cart_row['cart_id'];
+        
+        // Get cart items with product details
+        $items_sql = "
+            SELECT ci.cart_item_id as id, ci.product_id, ci.quantity, p.title, p.price, p.image 
+            FROM cart_items ci
+            JOIN products p ON ci.product_id = p.id
+            WHERE ci.cart_id = '$cart_id'
+        ";
+        $items_result = mysqli_query($conn, $items_sql);
+        $cart_items = mysqli_fetch_all($items_result, MYSQLI_ASSOC);
+    }
+    
+    // Get all active coupons from database
+    $coupon_query = "SELECT * FROM coupons ORDER BY amount DESC";
+    $coupon_result = mysqli_query($conn, $coupon_query);
+    $coupons = mysqli_fetch_all($coupon_result, MYSQLI_ASSOC);
+    
+    // Calculate cart totals
+    $bag_total = 0;
+    $total_items = 0;
+    
+    foreach ($cart_items as $item) {
+        $bag_total += $item['price'] * $item['quantity'];
+        $total_items += $item['quantity'];
+    }
+    
+    // No bag discount calculation since there's no original_price
+    $coupon_discount = 0;
+    $coupon_message = '';
+    $applied_coupon = null;
+    
+    // Process coupon code if submitted
+    if(isset($_POST['apply_coupon']) && !empty($_POST['coupon_code'])) {
+        $coupon_code = mysqli_real_escape_string($conn, $_POST['coupon_code']);
+        
+        // Check if coupon exists and is valid
+        $stmt = $conn->prepare("SELECT * FROM coupons WHERE code = ?");
+        $stmt->bind_param("s", $coupon_code);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        if($result->num_rows > 0) {
+            $coupon = $result->fetch_assoc();
+            
+            // Check minimum purchase requirement
+            if($bag_total >= $coupon['min_purchase']) {
+                if($coupon['is_percentage'] == 1) {
+                    // Percentage discount
+                    $coupon_discount = $bag_total * ($coupon['amount'] / 100);
+                } else {
+                    // Fixed amount discount
+                    $coupon_discount = $coupon['amount'];
+                }
+                
+                // Make sure discount doesn't exceed cart total
+                if($coupon_discount > $bag_total) {
+                    $coupon_discount = $bag_total;
+                }
+                
+                $coupon_message = "<div class='text-green-600'>Coupon applied: {$coupon['description']}</div>";
+                $applied_coupon = $coupon;
+                
+                // Store coupon in session for checkout
+                $_SESSION['applied_coupon'] = $coupon['code'];
+                $_SESSION['discount_amount'] = $coupon_discount;
+            } else {
+                $coupon_message = "<div class='text-red-500'>Minimum purchase of ₹" . number_format($coupon['min_purchase'], 2) . " required for this coupon.</div>";
+            }
+        } else {
+            $coupon_message = "<div class='text-red-500'>Invalid coupon code.</div>";
+        }
+    }
+    
+    // Calculate final total after coupon discount
+    $order_total = $bag_total - $coupon_discount;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,93 +118,75 @@
     
     <!-- Cart Container -->
     <div class="container mx-auto px-4 py-8">
-        <h2 class="text-2xl font-semibold mb-6">My Bag <span id="itemCount" class="text-gray-500 font-normal text-lg">(2 items)</span></h2>
+        <h2 class="text-2xl font-semibold mb-6">My Bag <span id="itemCount" class="text-gray-500 font-normal text-lg">(<?php echo $total_items; ?> item<?php echo $total_items !== 1 ? 's' : ''; ?>)</span></h2>
+        
+        <!-- Display success/error messages -->
+        <?php if(isset($_GET['success'])): ?>
+            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+                <?php echo htmlspecialchars($_GET['success']); ?>
+            </div>
+        <?php endif; ?>
+        
+        <?php if(isset($_GET['error'])): ?>
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                <?php echo htmlspecialchars($_GET['error']); ?>
+            </div>
+        <?php endif; ?>
         
         <div class="lg:flex lg:space-x-8">
             <!-- Cart Items -->
             <div class="lg:w-2/3">
-                <!-- Cart Item 1 -->
-                <div class="border border-gray-200 rounded-md mb-4 p-4 flex flex-col md:flex-row" data-id="1">
-                    <div class="flex-shrink-0 w-full md:w-32 h-40 bg-gray-100 rounded-md overflow-hidden mb-4 md:mb-0">
-                        <img src="https://via.placeholder.com/150" alt="Product" class="w-full h-full object-cover object-center">
+                <?php if(empty($cart_items)): ?>
+                    <div class="border border-gray-200 rounded-md mb-4 p-6 text-center">
+                        <p class="text-gray-600 mb-4">Your bag is empty.</p>
+                        <a href="index.php" class="bg-secondary hover:bg-secondary/90 text-white px-6 py-2 rounded-md font-medium">
+                            Continue Shopping
+                        </a>
                     </div>
-                    
-                    <div class="flex-grow md:ml-6 flex flex-col justify-between">
-                        <div>
-                            <h3 class="text-lg font-medium mb-1">Women Logo Applique Hooded Sweatshirt</h3>
-                            <p class="text-gray-500 text-sm mb-2">Size: S</p>
-                            
-                            <div class="flex items-center mb-3">
-                                <p class="item-price text-secondary font-medium">₹ 1,500.00</p>
-                                <p class="text-gray-400 line-through text-sm ml-2">₹ 2,999.00</p>
-                                <span class="ml-2 bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded">50% OFF</span>
+                <?php else: ?>
+                    <?php foreach ($cart_items as $item): ?>
+                        <div class="border border-gray-200 rounded-md mb-4 p-4 flex flex-col md:flex-row" data-id="<?php echo $item['id']; ?>">
+                            <div class="flex-shrink-0 w-full md:w-32 h-40 bg-gray-100 rounded-md overflow-hidden mb-4 md:mb-0">
+                                <img src="<?php echo htmlspecialchars($item['image']); ?>" alt="<?php echo htmlspecialchars($item['title']); ?>" class="w-full h-full object-cover object-center">
                             </div>
                             
-                            <div class="flex items-center mb-3">
-                                <span class="text-sm font-medium mr-3">Qty:</span>
-                                <select class="quantity-select border border-gray-300 rounded-md px-2 py-1 text-sm" data-price="1500" data-original-price="2999">
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                </select>
+                            <div class="flex-grow md:ml-6 flex flex-col justify-between">
+                                <div>
+                                    <h3 class="text-lg font-medium mb-1"><?php echo htmlspecialchars($item['title']); ?></h3>
+                                    
+                                    <div class="flex items-center mb-3">
+                                        <p class="item-price text-secondary font-medium">₹ <?php echo number_format($item['price'], 2); ?></p>
+                                    </div>
+                                    
+                                    <div class="flex items-center mb-3">
+                                        <span class="text-sm font-medium mr-3">Qty:</span>
+                                        <form action="update_cart.php" method="post" class="flex">
+                                            <input type="hidden" name="cart_item_id" value="<?php echo $item['id']; ?>">
+                                            <select name="quantity" class="quantity-select border border-gray-300 rounded-md px-2 py-1 text-sm" onchange="this.form.submit()">
+                                                <?php for($i = 1; $i <= 10; $i++): ?>
+                                                    <option value="<?php echo $i; ?>" <?php echo ($i == $item['quantity']) ? 'selected' : ''; ?>><?php echo $i; ?></option>
+                                                <?php endfor; ?>
+                                            </select>
+                                        </form>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex mt-3">
+                                    <form action="../Frontend/remove_from_cart.php" method="post">
+                                        <input type="hidden" name="cart_item_id" value="<?php echo $item['id']; ?>">
+                                        <button type="submit" class="text-red-500 text-sm font-medium mr-4">
+                                            <i class="far fa-trash-alt mr-1"></i> Delete
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
-                        
-                        <div class="flex mt-3">
-                            <button class="delete-item text-red-500 text-sm font-medium mr-4">
-                                <i class="far fa-trash-alt mr-1"></i> Delete
-                            </button>
-                            <button class="text-gray-600 text-sm font-medium flex items-center">
-                                <i class="far fa-heart mr-1"></i> Move to Wishlist
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
                 
-                <!-- Cart Item 2 -->
-                <div class="border border-gray-200 rounded-md mb-4 p-4 flex flex-col md:flex-row" data-id="2">
-                    <div class="flex-shrink-0 w-full md:w-32 h-40 bg-gray-100 rounded-md overflow-hidden mb-4 md:mb-0">
-                        <img src="https://via.placeholder.com/150" alt="Product" class="w-full h-full object-cover object-center">
-                    </div>
-                    
-                    <div class="flex-grow md:ml-6 flex flex-col justify-between">
-                        <div>
-                            <h3 class="text-lg font-medium mb-1">Women Mid-Wash Skinny Fit High-Rise Jeans</h3>
-                            <p class="text-gray-500 text-sm mb-2">Size: 26</p>
-                            
-                            <div class="flex items-center mb-3">
-                                <p class="item-price text-secondary font-medium">₹ 1,250.00</p>
-                                <p class="text-gray-400 line-through text-sm ml-2">₹ 2,499.00</p>
-                                <span class="ml-2 bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded">50% OFF</span>
-                            </div>
-                            
-                            <div class="flex items-center mb-3">
-                                <span class="text-sm font-medium mr-3">Qty:</span>
-                                <select class="quantity-select border border-gray-300 rounded-md px-2 py-1 text-sm" data-price="1250" data-original-price="2499">
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="flex mt-3">
-                            <button class="delete-item text-red-500 text-sm font-medium mr-4">
-                                <i class="far fa-trash-alt mr-1"></i> Delete
-                            </button>
-                            <button class="text-gray-600 text-sm font-medium flex items-center">
-                                <i class="far fa-heart mr-1"></i> Move to Wishlist
-                            </button>
-                        </div>
-                    </div>
-                </div>
                 
-                <button class="w-full py-3 border border-gray-300 rounded-md text-center text-sm font-medium hover:bg-gray-50 mt-4">
-                    + Add from Wishlist
-                </button>
             </div>
             
-            <!-- Order Summary -->
             <div class="lg:w-1/3 mt-8 lg:mt-0">
                 <div class="bg-white border border-gray-200 rounded-md p-6">
                     <h3 class="text-xl font-semibold mb-4">Order Details</h3>
@@ -117,11 +194,7 @@
                     <div class="space-y-3 mb-6">
                         <div class="flex justify-between">
                             <span class="text-gray-600">Bag Total</span>
-                            <span id="bagTotal" class="font-medium">₹5,498.00</span>
-                        </div>
-                        <div class="flex justify-between text-green-600">
-                            <span>Bag discount</span>
-                            <span id="bagDiscount">-₹2,748.00</span>
+                            <span id="bagTotal">₹<?php echo number_format($bag_total, 2); ?></span>
                         </div>
                         <div class="flex justify-between">
                             <span class="text-gray-600 flex items-center">
@@ -134,55 +207,69 @@
                             <span class="text-gray-600">Delivery Fee</span>
                             <span class="text-green-600">Free <span class="line-through text-gray-400 text-sm">₹99.00</span></span>
                         </div>
-                        <div id="couponDiscount" class=" justify-between text-green-600 hidden">
+                        <?php if($coupon_discount > 0): ?>
+                        <div id="couponDiscount" class="flex justify-between text-green-600">
                             <span>Coupon discount</span>
-                            <span id="couponDiscountValue">-₹0.00</span>
+                            <span id="couponDiscountValue">-₹<?php echo number_format($coupon_discount, 2); ?></span>
                         </div>
+                        <?php endif; ?>
                         <div class="border-t border-gray-200 pt-3 flex justify-between font-semibold">
                             <span>Order Total</span>
-                            <span id="orderTotal">₹2,750.00</span>
+                            <span id="orderTotal">₹<?php echo number_format($order_total, 2); ?></span>
                         </div>
                     </div>
                     
-                    <button class="w-full bg-secondary hover:bg-secondary/90 text-white py-3 rounded-md font-medium uppercase tracking-wide">
-                        Proceed to Shipping
-                    </button>
+                    <form action="shipping.php" method="post">
+                        <!-- Pass the coupon info to the shipping page if applied -->
+                        <?php if(isset($applied_coupon)): ?>
+                            <input type="hidden" name="applied_coupon" value="<?php echo $applied_coupon['code']; ?>">
+                            <input type="hidden" name="coupon_discount" value="<?php echo $coupon_discount; ?>">
+                        <?php endif; ?>
+                        <input type="hidden" name="bag_total" value="<?php echo $bag_total; ?>">
+                        <input type="hidden" name="order_total" value="<?php echo $order_total; ?>">
+                        <input type="hidden" name="cart_id" value="<?php echo $cart_id; ?>">
+                        <button type="submit" class="w-full bg-secondary hover:bg-secondary/90 text-white py-3 rounded-md font-medium uppercase tracking-wide">
+                            Proceed to Shipping
+                        </button>
+                    </form>
                     
                     <!-- Coupon Section -->
                     <div class="mt-6 border border-gray-200 rounded-md p-4">
                         <h4 class="font-medium mb-3">Apply Coupon</h4>
-                        <div class="flex">
-                            <input type="text" id="couponInput" placeholder="Enter coupon code" class="flex-grow border border-gray-300 rounded-l-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-secondary">
-                            <button id="applyCoupon" class="bg-gray-800 text-white px-4 py-2 rounded-r-md text-sm font-medium">APPLY</button>
-                        </div>
-                        <div id="couponMessage" class="mt-2 text-sm hidden"></div>
+                        <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post" class="flex">
+                            <input type="text" name="coupon_code" id="couponInput" placeholder="Enter coupon code" class="flex-grow border border-gray-300 rounded-l-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-secondary" value="<?php echo isset($applied_coupon) ? $applied_coupon['code'] : ''; ?>">
+                            <button type="submit" name="apply_coupon" class="bg-gray-800 text-white px-4 py-2 rounded-r-md text-sm font-medium">APPLY</button>
+                        </form>
+                        <?php if(!empty($coupon_message)): ?>
+                        <div id="couponMessage" class="mt-2 text-sm"><?php echo $coupon_message; ?></div>
+                        <?php endif; ?>
                         
+                        <?php if(!empty($coupons)): ?>
                         <div class="mt-4">
                             <h5 class="font-medium mb-2">Applicable Coupons</h5>
                             <div class="space-y-3">
-                                <!-- Coupon 1 -->
+                                <?php foreach($coupons as $index => $coupon): ?>
                                 <div class="flex items-start">
-                                    <input type="radio" id="coupon1" name="coupon" class="coupon-radio mt-1 mr-2" data-code="NEW125" data-discount="125">
+                                    <input type="radio" id="coupon<?php echo $index; ?>" name="coupon" class="coupon-radio mt-1 mr-2" 
+                                           data-code="<?php echo $coupon['code']; ?>" 
+                                           <?php echo (isset($applied_coupon) && $applied_coupon['code'] === $coupon['code']) ? 'checked' : ''; ?>>
                                     <div>
-                                        <label for="coupon1" class="block font-medium text-sm">Savings: ₹125.00</label>
-                                        <p class="text-sm text-gray-600">NEW125</p>
-                                        <p class="text-xs text-gray-500">Get Flat Rs.125 off on cart value of 500 & Above</p>
-                                        <p class="text-xs text-blue-500 cursor-pointer">View T & C</p>
+                                        <label for="coupon<?php echo $index; ?>" class="block font-medium text-sm">
+                                            Savings: <?php echo $coupon['is_percentage'] == 1 ? $coupon['amount'] . '%' : '₹' . number_format($coupon['amount'], 2); ?>
+                                        </label>
+                                        <p class="text-sm text-gray-600"><?php echo $coupon['code']; ?></p>
+                                        <p class="text-xs text-gray-500"><?php echo htmlspecialchars($coupon['description']); ?></p>
+                                        <p class="text-xs text-gray-500">
+                                            <?php if($coupon['min_purchase'] > 0): ?>
+                                                Minimum purchase: ₹<?php echo number_format($coupon['min_purchase'], 2); ?>
+                                            <?php endif; ?>
+                                        </p>
                                     </div>
                                 </div>
-                                
-                                <!-- Coupon 2 -->
-                                <div class="flex items-start">
-                                    <input type="radio" id="coupon2" name="coupon" class="coupon-radio mt-1 mr-2" data-code="FREEDEL" data-discount="99">
-                                    <div>
-                                        <label for="coupon2" class="block font-medium text-sm">Savings: ₹99.00</label>
-                                        <p class="text-sm text-gray-600">FREEDEL</p>
-                                        <p class="text-xs text-gray-500">Free Shipping on 799 and above. Just for you.</p>
-                                        <p class="text-xs text-blue-500 cursor-pointer">View T & C</p>
-                                    </div>
-                                </div>
+                                <?php endforeach; ?>
                             </div>
                         </div>
+                        <?php endif; ?>
                     </div>
                     
                     <!-- Return Policy -->
@@ -230,248 +317,20 @@
     </div>
 
     <script>
+        // Script to copy coupon code to input when radio button is clicked
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialize cart state
-            let cart = {
-                items: [
-                    { id: 1, name: "Women Logo Applique Hooded Sweatshirt", price: 1500, originalPrice: 2999, quantity: 1 },
-                    { id: 2, name: "Women Mid-Wash Skinny Fit High-Rise Jeans", price: 1250, originalPrice: 2499, quantity: 1 }
-                ],
-                couponDiscount: 0,
-                activeCoupon: null
-            };
-            
-            // Available coupons - defined globally for easy access
-            const coupons = [
-                { code: "NEW125", discount: 125, minValue: 500 },
-                { code: "FREEDEL", discount: 99, minValue: 799 }
-            ];
-            
-            // Cache DOM elements
-            const quantitySelects = document.querySelectorAll('.quantity-select');
-            const deleteButtons = document.querySelectorAll('.delete-item');
-            const bagTotalEl = document.getElementById('bagTotal');
-            const bagDiscountEl = document.getElementById('bagDiscount');
-            const orderTotalEl = document.getElementById('orderTotal');
-            const itemCountEl = document.getElementById('itemCount');
             const couponRadios = document.querySelectorAll('.coupon-radio');
-            const applyCouponBtn = document.getElementById('applyCoupon');
             const couponInput = document.getElementById('couponInput');
-            const couponMessageEl = document.getElementById('couponMessage');
-            const couponDiscountEl = document.getElementById('couponDiscount');
-            const couponDiscountValueEl = document.getElementById('couponDiscountValue');
             
-            // Format currency
-            function formatCurrency(amount) {
-                return '₹' + amount.toLocaleString('en-IN', { 
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                });
-            }
-            
-            // Calculate totals
-            function calculateTotals() {
-                // Calculate item totals
-                let bagTotal = 0;
-                let bagOriginalTotal = 0;
-                let totalItems = 0;
-                
-                cart.items.forEach(item => {
-                    bagTotal += item.price * item.quantity;
-                    bagOriginalTotal += item.originalPrice * item.quantity;
-                    totalItems += item.quantity;
-                });
-                
-                const bagDiscount = bagOriginalTotal - bagTotal;
-                let orderTotal = bagTotal - cart.couponDiscount;
-                
-                // Update DOM with the new values
-                bagTotalEl.textContent = formatCurrency(bagOriginalTotal);
-                bagDiscountEl.textContent = "-" + formatCurrency(bagDiscount);
-                orderTotalEl.textContent = formatCurrency(orderTotal);
-                itemCountEl.textContent = `(${totalItems} item${totalItems !== 1 ? 's' : ''})`;
-                
-                // Update coupon discount display
-                if (cart.couponDiscount > 0) {
-                    couponDiscountEl.classList.remove('hidden');
-                    couponDiscountValueEl.textContent = "-" + formatCurrency(cart.couponDiscount);
-                } else {
-                    couponDiscountEl.classList.add('hidden');
-                }
-                
-                // Return current cart value for coupon validation
-                return { bagTotal, orderTotal, totalItems };
-            }
-            
-            // Show coupon message
-            function showCouponMessage(message, type) {
-                couponMessageEl.textContent = message;
-                couponMessageEl.classList.remove('hidden', 'text-red-500', 'text-green-500');
-                
-                if (type === "error") {
-                    couponMessageEl.classList.add('text-red-500');
-                } else {
-                    couponMessageEl.classList.add('text-green-500');
-                }
-            }
-            
-            // Apply coupon function
-            function applyCoupon(code) {
-                const { bagTotal } = calculateTotals();
-                
-                // Reset previous coupon
-                cart.couponDiscount = 0;
-                cart.activeCoupon = null;
-                
-                // Find coupon
-                const coupon = coupons.find(c => c.code === code);
-                
-                if (!coupon) {
-                    showCouponMessage("Invalid coupon code", "error");
-                    calculateTotals(); // Recalculate without coupon
-                    return false;
-                }
-                
-                // Check minimum value
-                if (bagTotal < coupon.minValue) {
-                    showCouponMessage(`This coupon is applicable on orders above ₹${coupon.minValue}`, "error");
-                    calculateTotals(); // Recalculate without coupon
-                    return false;
-                }
-                
-                // Apply coupon
-                cart.couponDiscount = coupon.discount;
-                cart.activeCoupon = coupon.code;
-                
-                // Update radio buttons to match the applied coupon
-                couponRadios.forEach(radio => {
-                    radio.checked = (radio.dataset.code === coupon.code);
-                });
-                
-                showCouponMessage(`Coupon ${coupon.code} applied successfully!`, "success");
-                calculateTotals();
-                return true;
-            }
-            
-            // Handle quantity change
-            quantitySelects.forEach(select => {
-                select.addEventListener('change', function() {
-                    const itemId = parseInt(this.closest('[data-id]').dataset.id);
-                    const quantity = parseInt(this.value);
-                    
-                    // Update cart state
-                    const item = cart.items.find(item => item.id === itemId);
-                    if (item) {
-                        item.quantity = quantity;
-                        
-                        // Update item price display in the DOM
-                        const itemContainer = this.closest('[data-id]');
-                        const itemPriceEl = itemContainer.querySelector('.item-price');
-                        itemPriceEl.textContent = `₹ ${(item.price * quantity).toLocaleString('en-IN')}.00`;
-                    }
-                    
-                    // Recalculate totals
-                    calculateTotals();
-                    
-                    // If there was an active coupon, check if it's still valid
-                    if (cart.activeCoupon) {
-                        const { bagTotal } = calculateTotals();
-                        const activeCoupon = coupons.find(c => c.code === cart.activeCoupon);
-                        
-                        if (activeCoupon && bagTotal < activeCoupon.minValue) {
-                            // Coupon is no longer valid
-                            cart.couponDiscount = 0;
-                            cart.activeCoupon = null;
-                            showCouponMessage(`Coupon ${activeCoupon.code} removed - cart value below minimum requirement of ₹${activeCoupon.minValue}`, "error");
-                            calculateTotals();
-                            
-                            // Uncheck radio buttons
-                            couponRadios.forEach(radio => {
-                                radio.checked = false;
-                            });
-                        }
-                    }
-                });
-            });
-            
-            // Handle delete item
-            deleteButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const itemContainer = this.closest('[data-id]');
-                    const itemId = parseInt(itemContainer.dataset.id);
-                    
-                    // Remove from cart state
-                    cart.items = cart.items.filter(item => item.id !== itemId);
-                    
-                    // Remove from DOM
-                    itemContainer.remove();
-                    
-                    // If cart is empty, could redirect or show empty message
-                    if (cart.items.length === 0) {
-                        // Show empty cart message or redirect
-                    }
-                    
-                    // Recalculate totals
-                    calculateTotals();
-                    
-                    // If there was an active coupon, check if it's still valid
-                    if (cart.activeCoupon) {
-                        const { bagTotal } = calculateTotals();
-                        const activeCoupon = coupons.find(c => c.code === cart.activeCoupon);
-                        
-                        if (activeCoupon && bagTotal < activeCoupon.minValue) {
-                            // Coupon is no longer valid
-                            cart.couponDiscount = 0;
-                            cart.activeCoupon = null;
-                            showCouponMessage(`Coupon ${activeCoupon.code} removed - cart value below minimum requirement of ₹${activeCoupon.minValue}`, "error");
-                            calculateTotals();
-                            
-                            // Uncheck radio buttons
-                            couponRadios.forEach(radio => {
-                                radio.checked = false;
-                            });
-                        }
-                    }
-                });
-            });
-            
-            // Apply coupon button click
-            applyCouponBtn.addEventListener('click', function() {
-                const code = couponInput.value.trim();
-                if (!code) {
-                    showCouponMessage("Please enter a coupon code", "error");
-                    return;
-                }
-                
-                applyCoupon(code.toUpperCase());
-            });
-            
-            // Coupon input enter key
-            couponInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    applyCouponBtn.click();
-                    e.preventDefault();
-                }
-            });
-            
-            // Coupon radio button change - Just fill the input field, don't apply automatically
             couponRadios.forEach(radio => {
                 radio.addEventListener('change', function() {
                     if (this.checked) {
-                        const code = this.dataset.code;
-                        couponInput.value = code;
-                        // Don't apply automatically - user must click APPLY button
+                        couponInput.value = this.dataset.code;
+                        // Auto-submit the form when a coupon is selected
+                        this.closest('form').submit();
                     }
                 });
             });
-            
-            // Clear coupon message when typing
-            couponInput.addEventListener('input', function() {
-                couponMessageEl.classList.add('hidden');
-            });
-            
-            // Initialize calculations
-            calculateTotals();
         });
     </script>
 </body>
