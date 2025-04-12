@@ -35,6 +35,9 @@
             case 'profile':
                 include 'profile.php';
                 break;
+            case 'blog':
+                include 'blog.php';
+                break;
             default:
                 include 'dashboard.php';
                 break;
