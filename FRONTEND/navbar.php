@@ -45,7 +45,7 @@ session_start();
                 </a>
             </div>
             <div class="group relative">
-                <a href="#" class="text-gray-700 hover:text-black flex items-center">
+                <a href="index.php?page=blog" class="text-gray-700 hover:text-black flex items-center">
                     BLOG <i class="text-xs ml-1"></i>
                 </a>
             </div>
@@ -138,9 +138,7 @@ session_start();
                 <a href="#" class="text-gray-700 hover:text-black py-2 px-4">HOME</a>
                 <a href="#" class="text-gray-700 hover:text-black py-2 px-4">SHOP</a>
                 <a href="#" class="text-gray-700 hover:text-black py-2 px-4">BLOG</a>
-                <a href="#" class="text-gray-700 hover:text-black py-2 px-4">PAGES</a>
                 <a href="#" class="text-gray-700 hover:text-black py-2 px-4">CONTACT</a>
-                <a href="#" class="text-gray-700 hover:text-black py-2 px-4">WISHLIST</a>
             </nav>
         </div>
     </div>
