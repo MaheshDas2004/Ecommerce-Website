@@ -219,7 +219,7 @@ if(!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
                         </div>
                     </div>
                     
-                    <form action="shipping.php" method="post">
+                    <form action="payment.php">
                         <!-- Pass the coupon info to the shipping page if applied -->
                         <?php if(isset($applied_coupon)): ?>
                             <input type="hidden" name="applied_coupon" value="<?php echo $applied_coupon['code']; ?>">
@@ -227,6 +227,8 @@ if(!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
                         <?php endif; ?>
                         <input type="hidden" name="bag_total" value="<?php echo $bag_total; ?>">
                         <input type="hidden" name="order_total" value="<?php echo $order_total; ?>">
+                        <input type="hidden" name="source" value="<?php echo 'cart'; ?>">
+                        
                         <input type="hidden" name="cart_id" value="<?php echo $cart_id; ?>">
                         <button type="submit" class="w-full bg-secondary hover:bg-secondary/90 text-white py-3 rounded-md font-medium uppercase tracking-wide">
                             Proceed to Shipping

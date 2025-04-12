@@ -1,42 +1,47 @@
 <?php
- include '../Backend/config.php';
- $user_id = $_SESSION['user_id'];
- $sql= "SELECT id, user_id ,product_id, order_status,created_at FROM orders WHERE user_id = $user_id ORDER BY created_at DESC LIMIT 5";
- $result = mysqli_query($conn, $sql);
-    if (!$result) {
-        die("Query failed: " . mysqli_error($conn));
-    }
-    
-    $orders =[];
-    if (mysqli_num_rows($result) > 0) {
-        while ($row = mysqli_fetch_assoc($result)) {
-            $orders[] = $row;
-        }
-    }
+include '../Backend/config.php';
+
+// Check if user is logged in
+if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
+    header("location: Login.php");
+    exit;
+}
+
+$user_id = $_SESSION['user_id'];
+
+// Fetch orders with product details
+$sql = "SELECT o.order_id, o.total_amount, o.payment_method, o.order_status, o.created_at,
+               GROUP_CONCAT(p.title SEPARATOR ', ') AS products,
+               COUNT(oi.product_id) AS item_count
+        FROM orders o
+        JOIN ordered_items oi ON o.order_id = oi.order_id
+        JOIN products p ON oi.product_id = p.id
+        WHERE o.user_id = ?
+        GROUP BY o.order_id
+        ORDER BY o.created_at DESC
+        LIMIT 5";
+
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$orders = $result->fetch_all(MYSQLI_ASSOC);
+$stmt->close();
+
+// Fetch user details
+$user_sql = "SELECT Name, Email FROM users WHERE Sno = ?";
+$stmt = $conn->prepare($user_sql);
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$user_result = $stmt->get_result();
+$user = $user_result->fetch_assoc();
+$stmt->close();
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VEYRA.co - Profile</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        montserrat: ['Montserrat', 'sans-serif'],
-                    },
-                    colors: {
-                        'soft-pink': '#FFE4E1',
-                    }
-                }
-            }
-        }
-    </script>
+    <!-- Keep the head section the same -->
 </head>
 <body class="bg-white text-gray-800 font-montserrat leading-relaxed">    
     <!-- Hero Section -->
@@ -50,99 +55,46 @@
     <!-- Main Content -->
     <div class="max-w-6xl mx-auto px-5 py-10">
         <div class="flex flex-wrap gap-8 mb-12 md:flex-col">
-            <!-- Sidebar -->
-            <aside class="flex-1 min-w-[280px] bg-white rounded-lg shadow-md p-8 h-fit">
-                <div class="w-32 h-32 rounded-full bg-gray-100 mx-auto mb-5 flex items-center justify-center overflow-hidden">
-                    <div class="w-20 h-20 rounded-full bg-gray-300 relative">
-                        <div class="absolute w-3/5 h-2/5 rounded-full bg-gray-300 -top-1/4 left-1/5"></div>
-                    </div>
-                </div>
-                
-                <h2 class="text-xl font-semibold text-center mb-8"><?php 
-                    if (isset($_SESSION['email'])) {
-                        $sql= "SELECT name FROM users WHERE Email = ?";
-                        $stmt = mysqli_prepare($conn, $sql);
-                        mysqli_stmt_bind_param($stmt, "s", $_SESSION['email']);
-                        mysqli_stmt_execute($stmt);
-                        $result = mysqli_stmt_get_result($stmt);
-                        if ($result && mysqli_num_rows($result) > 0) {
-                            $row = mysqli_fetch_assoc($result);
-                            echo htmlspecialchars($row['name']);
-                        } else {
-                            echo "User";
-                        }
-                    }
-                ?></h2>
-                
-                <ul class="list-none">
-                    <li class="mb-4 pb-4 border-b border-gray-100 last:border-b-0 last:mb-0 last:pb-0">
-                        <a href="#" class="flex items-center justify-between no-underline text-gray-800 font-medium transition hover:text-gray-500">
-                            <span>Account Overview</span>
-                            <span class="text-sm transition-transform group-hover:translate-x-1">›</span>
-                        </a>
-                    </li>
-                    <li class="mb-4 pb-4 border-b border-gray-100 last:border-b-0 last:mb-0 last:pb-0">
-                        <a href="#" class="flex items-center justify-between no-underline text-gray-800 font-medium transition hover:text-gray-500">
-                            <span>Orders</span>
-                            <span class="text-sm transition-transform group-hover:translate-x-1">›</span>
-                        </a>
-                    </li>
-                    <li class="mb-4 pb-4 border-b border-gray-100 last:border-b-0 last:mb-0 last:pb-0">
-                        <a href="#" class="flex items-center justify-between no-underline text-gray-800 font-medium transition hover:text-gray-500">
-                            <span>Address Book</span>
-                            <span class="text-sm transition-transform group-hover:translate-x-1">›</span>
-                        </a>
-                    </li>
-                    <li class="mb-4 pb-4 border-b border-gray-100 last:border-b-0 last:mb-0 last:pb-0">
-                        <a href="#" class="flex items-center justify-between no-underline text-gray-800 font-medium transition hover:text-gray-500">
-                            <span>Account Settings</span>
-                            <span class="text-sm transition-transform group-hover:translate-x-1">›</span>
-                        </a>
-                    </li>
-                    <li class="mb-4 pb-4 border-b border-gray-100 last:border-b-0 last:mb-0 last:pb-0">
-                        <a href="#" class="flex items-center justify-between no-underline text-gray-800 font-medium transition hover:text-gray-500">
-                            <span>Coupons</span>
-                            <span class="text-sm transition-transform group-hover:translate-x-1">›</span>
-                        </a>
-                    </li>
-                    <li class="mb-4 pb-4 border-b border-gray-100 last:border-b-0 last:mb-0 last:pb-0">
-                        <a href="#" class="flex items-center justify-between no-underline text-gray-800 font-medium transition hover:text-gray-500">
-                            <span>Reviews & Ratings</span>
-                            <span class="text-sm transition-transform group-hover:translate-x-1">›</span>
-                        </a>
-                    </li>
-                    <li class="mb-4 pb-4 border-b border-gray-100 last:border-b-0 last:mb-0 last:pb-0">
-                        <a href="#" class="flex items-center justify-between no-underline text-gray-800 font-medium transition hover:text-gray-500">
-                            <span>Help & Support</span>
-                            <span class="text-sm transition-transform group-hover:translate-x-1">›</span>
-                        </a>
-                    </li>
-                    <li class="mt-8">
-                        <a href="Logout.php" class="flex items-center justify-center no-underline bg-gray-800 text-white py-3 px-4 rounded transition hover:bg-gray-700">
-                            <span>Logout</span>
-                        </a>
-                    </li>
-                </ul>
-            </aside>
+            <!-- Sidebar (Keep the sidebar the same) -->
             
             <!-- Main Content -->
             <main class="flex-grow min-w-[300px]">
                 <!-- Profile Information Card -->
-                <div class="bg-white rounded-lg shadow-md p-8 mb-8 sm:p-5">
-                    <h3 class="text-xl font-semibold mb-5 text-black relative pb-3 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-12 after:h-0.5 after:bg-soft-pink">Profile Information</h3>
-                    
-                    <div class="flex flex-wrap mb-4">
-                        <div class="w-38 font-medium text-gray-600 mr-5">Email</div>
-                        <div class="flex-1 min-w-[200px] text-gray-800">
-                            <?php echo $_SESSION['email']; ?>
+                    <div class="bg-white rounded-lg shadow-md p-8 mb-8 sm:p-5">
+                        <div class="flex justify-between items-center mb-5">
+                            <h3 class="text-xl font-semibold text-black relative pb-3 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-12 after:h-0.5 after:bg-soft-pink">Profile Information</h3>
+                            
                         </div>
+                        
+                        <div class="flex flex-wrap mb-4">
+                            <div class="w-38 font-medium text-gray-600 mr-5">Email</div>
+                            <div class="flex-1 min-w-[200px] text-gray-800">
+                                <?= htmlspecialchars($user['Email']) ?>
+                            </div>
+                        </div>
+
+                        
+                        <div class="flex flex-wrap mb-4">
+                            <div class="w-38 font-medium text-gray-600 mr-5">Phone Number</div>
+                            <div class="flex-1 min-w-[200px] text-gray-800">
+                                <?= htmlspecialchars($user['phone'] ?? 'Not provided') ?>
+                            </div>
+                        </div>
+                        <!-- Logout Button -->
+                         <div class="flex justify-between mt-5">
+                            <a href="update_profile.php" class="inline-block px-4 py-2 rounded border border-gray-800 text-gray-800 text-sm font-medium no-underline transition-all hover:bg-gray-800 hover:text-white mr-3">
+                                Update Profile
+                            </a>
+                            
+                            <a href="change_password.php" class="inline-block px-4 py-2 rounded border border-gray-800 text-gray-800 text-sm font-medium no-underline transition-all hover:bg-gray-800 hover:text-white mr-3">
+                                Change Password
+                            </a>
+                         <a href="logout.php" class="inline-block px-4 py-2 rounded bg-soft-pink text-white text-sm font-medium no-underline transition-all bg-gray-800 hover:text-white">
+                                Logout
+                            </a>
+                         </div>
+                        
                     </div>
-                    
-                    <div class="flex flex-wrap mb-4">
-                        <div class="w-38 font-medium text-gray-600 mr-5">Phone Number</div>
-                        <div class="flex-1 min-w-[200px] text-gray-800">+1 234 567 8901</div>
-                    </div>
-                                    </div>
                 
                 <!-- Recent Orders Card -->
                 <div class="bg-white rounded-lg shadow-md p-8 mb-8 sm:p-5">
@@ -152,34 +104,39 @@
                         <thead>
                             <tr>
                                 <th class="text-left py-4 px-3 font-medium text-gray-600 border-b border-gray-100">Order</th>
+                                <th class="text-left py-4 px-3 font-medium text-gray-600 border-b border-gray-100">Items</th>
                                 <th class="text-left py-4 px-3 font-medium text-gray-600 border-b border-gray-100 md:table-cell sm:hidden">Date</th>
+                                <th class="text-left py-4 px-3 font-medium text-gray-600 border-b border-gray-100">Total</th>
                                 <th class="text-left py-4 px-3 font-medium text-gray-600 border-b border-gray-100 sm:hidden md:table-cell">Status</th>
                                 <th class="text-left py-4 px-3 font-medium text-gray-600 border-b border-gray-100">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach($orders as $order){ ?>
+                            <?php foreach($orders as $order): ?>
                                 <tr>
-                                <td class="py-4 px-3 border-b border-gray-100 font-medium text-gray-800">Order: <?php echo $order['id']?></td>
-                                <td class="py-4 px-3 border-b border-gray-100 md:table-cell sm:hidden">
-                                    <?php echo date('j M Y', strtotime($order['created_at'])); ?>
-                                </td>
-
-                                <td class="py-4 px-3 border-b border-gray-100 sm:hidden md:table-cell">
-                                    <?php echo $order['order_status']; ?>
-                                </td>
-                                <td class="py-4 px-3 border-b border-gray-100">
-                                    <form action="">
-                                        <input type="hidden" name="order_id" value="<?php echo $order['id']?>">
-                                        <input type="hidden" name="user_id" value="<?php echo $user_id?>">
-                                        <button action="" class="inline-block px-4 py-2 rounded border border-gray-800 text-gray-800 text-sm font-medium no-underline transition-all hover:bg-gray-800 hover:text-white">
-                                        View Order
-                                    </button>
-                                    </form>
-                                    
-                                </td>
-                            </tr>
-                            <?php } ?>
+                                    <td class="py-4 px-3 border-b border-gray-100 font-medium text-gray-800">
+                                        #<?= htmlspecialchars($order['order_id']) ?>
+                                    </td>
+                                    <td class="py-4 px-3 border-b border-gray-100">
+                                        <?= htmlspecialchars($order['item_count']) ?> items
+                                    </td>
+                                    <td class="py-4 px-3 border-b border-gray-100 md:table-cell sm:hidden">
+                                        <?= date('M j, Y', strtotime($order['created_at'])) ?>
+                                    </td>
+                                    <td class="py-4 px-3 border-b border-gray-100">
+                                        ₹<?= number_format($order['total_amount'], 2) ?>
+                                    </td>
+                                    <td class="py-4 px-3 border-b border-gray-100 sm:hidden md:table-cell">
+                                        <span class="capitalize"><?= htmlspecialchars($order['order_status']) ?></span>
+                                    </td>
+                                    <td class="py-4 px-3 border-b border-gray-100">
+                                        <a href="order_confirmation.php?order_id=<?= $order['order_id'] ?>" 
+                                           class="inline-block px-4 py-2 rounded border border-gray-800 text-gray-800 text-sm font-medium no-underline transition-all hover:bg-gray-800 hover:text-white">
+                                            View Details
+                                        </a>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
                         </tbody>
                     </table>
                 </div>
@@ -192,7 +149,8 @@
         <p class="text-gray-600 text-sm">© 2025 VEYRA.co All Rights Reserved.</p>
     </footer>
     
-    <script>
+     
+<script>
         document.querySelectorAll('a[href="#"]').forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();

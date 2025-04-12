@@ -6,82 +6,150 @@
     <title>VEYRA</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-    <style>        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap');
-</style>
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap');
+    /* Footer */
+    footer {
+            background-color: #333;
+            color: white;
+            padding: 60px 0 30px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            display: block;
+            width: 30px;
+            height: 2px;
+            background-color: #fce4e4;
+            margin-top: 8px;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: #ccc;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            background-color: #444;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+
+        .social-icon:hover {
+            background-color: #fce4e4;
+            color: #333;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid #444;
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+    </style>
 </head>
 <body>
-    <!-- Footer Section -->
-<!-- Footer -->
-<footer class="bg-gray-900 text-gray-300 py-16">
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-                <div>
-                    <h3 class="text-2xl font-bold text-white mb-4">VEYRA<span class="text-rose-400">.co</span></h3>
-                    <p class="text-sm mb-6">Premium fashion and lifestyle products for the modern consumer.</p>
-                    <div class="flex space-x-4">
-                        <a href="#" class="bg-gray-800 hover:bg-rose-600 w-10 h-10 rounded-full flex items-center justify-center transition-colors">
-                            <i class="fab fa-facebook-f"></i>
+<footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>About VEYRA</h3>
+                    <p>VEYRA.co is a premier fashion and lifestyle blog dedicated to bringing you the latest trends, style inspiration, and expert insights.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                            </svg>
                         </a>
-                        <a href="#" class="bg-gray-800 hover:bg-rose-600 w-10 h-10 rounded-full flex items-center justify-center transition-colors">
-                            <i class="fab fa-twitter"></i>
+                        <a href="#" class="social-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                            </svg>
                         </a>
-                        <a href="#" class="bg-gray-800 hover:bg-rose-600 w-10 h-10 rounded-full flex items-center justify-center transition-colors">
-                            <i class="fab fa-instagram"></i>
+                        <a href="#" class="social-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+                            </svg>
                         </a>
-                        <a href="#" class="bg-gray-800 hover:bg-rose-600 w-10 h-10 rounded-full flex items-center justify-center transition-colors">
-                            <i class="fab fa-pinterest"></i>
+                        <a href="#" class="social-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                                <rect x="2" y="9" width="4" height="12"></rect>
+                                <circle cx="4" cy="4" r="2"></circle>
+                            </svg>
                         </a>
                     </div>
                 </div>
-                <div>
-                    <h4 class="text-white font-medium mb-4 uppercase tracking-wider">Shop</h4>
-                    <ul class="space-y-3 text-sm">
-                        <li><a href="#" class="hover:text-rose-400 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2 text-rose-400"></i>Men's Clothing</a></li>
-                        <li><a href="#" class="hover:text-rose-400 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2 text-rose-400"></i>Women's Clothing</a></li>
-                        <li><a href="#" class="hover:text-rose-400 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2 text-rose-400"></i>Jewelry</a></li>
-                        <li><a href="#" class="hover:text-rose-400 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2 text-rose-400"></i>Electronics</a></li>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Categories</a></li>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Contact</a></li>
                     </ul>
                 </div>
-                <div>
-                    <h4 class="text-white font-medium mb-4 uppercase tracking-wider">Information</h4>
-                    <ul class="space-y-3 text-sm">
-                        <li><a href="#" class="hover:text-rose-400 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2 text-rose-400"></i>About Us</a></li>
-                        <li><a href="#" class="hover:text-rose-400 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2 text-rose-400"></i>Contact Us</a></li>
-                        <li><a href="#" class="hover:text-rose-400 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2 text-rose-400"></i>Terms & Conditions</a></li>
-                        <li><a href="#" class="hover:text-rose-400 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2 text-rose-400"></i>Returns & Exchanges</a></li>
-                        <li><a href="#" class="hover:text-rose-400 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2 text-rose-400"></i>Shipping & Delivery</a></li>
+                <div class="footer-column">
+                    <h3>Categories</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Women's Fashion</a></li>
+                        <li><a href="#">Men's Style</a></li>
+                        <li><a href="#">Beauty & Makeup</a></li>
+                        <li><a href="#">Accessories</a></li>
+                        <li><a href="#">Sustainable Fashion</a></li>
                     </ul>
                 </div>
-                <div>
-                    <h4 class="text-white font-medium mb-4 uppercase tracking-wider">Contact Us</h4>
-                    <ul class="space-y-3 text-sm">
-                        <li class="flex items-start">
-                            <i class="fas fa-map-marker-alt mt-1 mr-3 text-rose-400"></i>
-                            <span>123 Fashion Street, New York, NY 10001</span>
-                        </li>
-                        <li class="flex items-center">
-                            <i class="fas fa-phone-alt mr-3 text-rose-400"></i>
-                            <span>+1 (555) 123-4567</span>
-                        </li>
-                        <li class="flex items-center">
-                            <i class="fas fa-envelope mr-3 text-rose-400"></i>
-                            <span>support@veyra.co</span>
-                        </li>
-                        <li class="flex items-center">
-                            <i class="fas fa-clock mr-3 text-rose-400"></i>
-                            <span>Mon-Fri: 9:00 AM - 6:00 PM</span>
-                        </li>
+                <div class="footer-column">
+                    <h3>Contact Us</h3>
+                    <ul class="footer-links">
+                        <li>Email: info@veyra.co</li>
+                        <li>Phone: +1 (555) 123-4567</li>
+                        <li>Address: 123 Fashion Street, New York, NY 10001</li>
                     </ul>
                 </div>
             </div>
-            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
-                <p class="text-sm">&copy; 2025 VEYRA. All rights reserved.</p>
-                <div class="flex space-x-4 mt-4 md:mt-0">
-                    <img src="./images/payment-visa.svg" alt="Visa" class="h-6">
-                    <img src="./images/payment-mastercard.svg" alt="Mastercard" class="h-6">
-                    <img src="./images/payment-paypal.svg" alt="PayPal" class="h-6">
-                    <img src="./images/payment-apple.svg" alt="Apple Pay" class="h-6">
-                </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 VEYRA.co. All Rights Reserved.</p>
             </div>
         </div>
     </footer>

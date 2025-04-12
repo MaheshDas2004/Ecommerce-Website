@@ -1,121 +1,180 @@
 <?php
-// Initialize the session
 session_start();
-
-// Check if the user is logged in, if not redirect to login page
 if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
     header("location: login.php");
     exit;
 }
 
-// Include config file
-require_once "../Backend/config.php";  // Adjust this path if needed
+require_once "../Backend/config.php";
 
-// Define variables and initialize with empty values
 $address = $payment_method = "";
 $address_err = $payment_method_err = "";
-$product_id = "";
+$order_source = isset($_GET['source']) ? $_GET['source'] : 'direct';
 
-// Get the product details
-if(isset($_GET["product_id"])) {
+// Validate order source
+if (!in_array($order_source, ['cart', 'direct'])) {
+    header("location: error.php");
+    exit;
+}
+
+// Initialize variables
+$order_items = [];
+$total_amount = 0;
+$bag_total = 0;
+
+if ($order_source === 'direct') {
+    // Handle direct product purchase
+    if (!isset($_GET["product_id"])) {
+        header("location: index.php?page=shop&error=Product ID is required.");
+        exit;
+    }
+    
     $product_id = trim($_GET["product_id"]);
-    
-    // Prepare a select statement
-    $sql = "SELECT * FROM products WHERE id = ?";
-    
-    if($stmt = $conn->prepare($sql)) {  // Changed $mysqli to $conn
-        // Bind variables to the prepared statement as parameters
-        $stmt->bind_param("i", $param_id);
-        
-        // Set parameters
-        $param_id = $product_id;
-        
-        // Attempt to execute the prepared statement
-        if($stmt->execute()) {
-            $result = $stmt->get_result();
-            
-            if($result->num_rows == 1) {
-                $product = $result->fetch_array(MYSQLI_ASSOC);
-            } else {
-                // Product not found
-                header("location: error.php");
-                exit();
-            }
-        } else {
-            echo "Oops! Something went wrong. Please try again later.";
-        }
+    $quantity = isset($_GET["quantity"]) ? (int)$_GET["quantity"] : 1;
 
-        // Close statement
+    // Get product details
+    $sql = "SELECT * FROM products WHERE id = ?";
+    if ($stmt = $conn->prepare($sql)) {
+        $stmt->bind_param("i", $product_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $product = $result->fetch_assoc();
         $stmt->close();
+        
+        if (!$product) {
+            header("location: error.php");
+            exit;
+        }
+        
+        $order_items[] = [
+            'product_id' => $product['id'],
+            'title' => $product['title'],
+            'price' => $product['price'],
+            'quantity' => $quantity
+        ];
+        $bag_total = $product['price'] * $quantity;
+        $total_amount = $bag_total;
     }
 } else {
-    // No product ID provided
-    header("location: shop.php");
-    exit();
-}
-
-// Processing form data when form is submitted
-if($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Handle cart-based purchase
+    $sql = "SELECT ci.*, p.title, p.price 
+    FROM cart_items ci
+    JOIN cart c ON ci.cart_id = c.cart_id
+    JOIN products p ON ci.product_id = p.id
+    WHERE c.user_id = ?";
     
-    // Validate address
-    if(empty(trim($_POST["address"]))) {
-        $address_err = "Please enter an address.";
-    } else {
-        $address = trim($_POST["address"]);
-    }
-    
-    // Validate payment method
-    if(empty($_POST["payment_method"])) {
-        $payment_method_err = "Please select a payment method.";
-    } else {
-        $payment_method = $_POST["payment_method"];
-    }
-    
-    // Check input errors before creating order
-    if(empty($address_err) && empty($payment_method_err)) {
+    if ($stmt = $conn->prepare($sql)) {
+        $stmt->bind_param("i", $_SESSION['user_id']);
+        $stmt->execute();
+        $result = $stmt->get_result();
         
+        while ($row = $result->fetch_assoc()) {
+            $order_items[] = $row;
+            $bag_total += $row['price'] * $row['quantity'];
+        }
+        $total_amount = $bag_total;
+        $stmt->close();
         
-        // Prepare an insert statement
-        $sql = "INSERT INTO orders (user_id, product_id, quantity, total_price, address, payment_method) VALUES (?, ?, ?, ?, ?, ?)";
-        
-        if($stmt = $conn->prepare($sql)) {  // Changed $mysqli to $conn
-            // Bind variables to the prepared statement as parameters
-            $stmt->bind_param("iiidss", $param_user_id, $param_product_id, $param_quantity, $param_total_price, $param_address, $param_payment_method);
-            
-            // Set parameters
-            $param_user_id = $_SESSION['user_id'];
-            
-            
-            $param_product_id = $product_id;
-            $param_quantity = 1; // Default quantity
-            $param_total_price = $product["price"];
-            $param_address = $address;
-            $param_payment_method = $payment_method;
-            
-            // Attempt to execute the prepared statement
-            if($stmt->execute()) {
-                $order_id = $conn->insert_id;  // Changed $mysqli to $conn
-                
-                // If payment method is COD, redirect to order confirmation
-                if($payment_method == "cod") {
-                    header("location: order_confirmation.php?order_id=" . $order_id);
-                } else {
-                    // For UPI, redirect to UPI payment page
-                    header("location: upi_payment.php?order_id=" . $order_id);
-                }
-                exit();
-            } else {
-                echo "Oops! Something went wrong. Please try again later.";
-            }
-
-            // Close statement
-            $stmt->close();
+        if (empty($order_items)) {
+            header("location: index.php?page=cart&error=Your cart is empty.");
+            exit;
         }
     }
-    
-    // Close connection
-    $conn->close();  // Changed $mysqli to $conn
 }
+
+// Handle coupon and shipping from session
+$coupon_discount = $_SESSION['discount_amount'] ?? 0;
+$total_amount = $bag_total - $coupon_discount;
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Validate inputs
+    $address = [
+        'name' => trim($_POST['name']),
+        'phone' => trim($_POST['phone']),
+        'line1' => trim($_POST['address_line1']),
+        'line2' => trim($_POST['address_line2']),
+        'city' => trim($_POST['city']),
+        'state' => trim($_POST['state']),
+        'zipcode' => trim($_POST['zipcode'])
+    ];
+    
+    $payment_method = $_POST['payment_method'] ?? '';
+
+    // Validate required fields
+    if (empty($address['name'])) $address_err = "Full name is required";
+    if (empty($address['phone'])) $address_err = "Phone number is required";
+    if (empty($address['line1'])) $address_err = "Address line 1 is required";
+    if (empty($address['city'])) $address_err = "City is required";
+    if (empty($address['state'])) $address_err = "State is required";
+    if (empty($address['zipcode'])) $address_err = "ZIP code is required";
+    if (empty($payment_method)) $payment_method_err = "Payment method is required";
+
+    if (empty($address_err) && empty($payment_method_err)) {
+        $conn->begin_transaction();
+        try {
+            // Insert into orders table
+            $sql = "INSERT INTO orders (user_id, total_amount,payment_status,payment_method,order_status,shipping_address)
+                    VALUES ( ?, ?, 'pending', ?,'processing', ?)";
+            
+            $stmt = $conn->prepare($sql);
+            $shipping_address = json_encode($address);
+            $stmt->bind_param("idss", 
+                $_SESSION['user_id'], 
+                $total_amount, 
+                $payment_method, 
+                $shipping_address
+            );
+            $stmt->execute();
+            $order_id = $conn->insert_id;
+            $stmt->close();
+
+            // Insert into ordered_items
+            foreach ($order_items as $item) {
+                $sql = "INSERT INTO ordered_items (order_id, product_id, quantity, unit_price)
+                        VALUES (?, ?, ?, ?)";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("iiid", $order_id, $item['product_id'], $item['quantity'], $item['price']);
+                $stmt->execute();
+                $stmt->close();
+            }
+
+            // Clear cart if cart-based order
+            if ($order_source === 'cart') {
+                $sql = "DELETE ci
+                FROM cart_items ci
+                JOIN cart c ON ci.cart_id = c.cart_id
+                WHERE c.user_id = ?";
+        
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("i", $_SESSION['user_id']);
+                $stmt->execute();
+                $stmt->close();
+            }
+
+            $conn->commit();
+
+            // Redirect based on payment method
+            if ($payment_method == "cod") {
+                header("Location: order_confirmation.php?order_id=" . $order_id);
+            } else {
+                header("Location: upi_payment.php?order_id=" . $order_id);
+            }
+            exit();
+            
+        } catch (Exception $e) {
+            $conn->rollback();
+            die("Error processing order: " . $e->getMessage());
+        }
+    }
+}
+
+// Get user details
+$user_sql = "SELECT * FROM users WHERE Sno = ?";
+$stmt = $conn->prepare($user_sql);
+$stmt->bind_param("i", $_SESSION['user_id']);
+$stmt->execute();
+$user = $stmt->get_result()->fetch_assoc();
+$stmt->close();
 ?>
 
 <!DOCTYPE html>
@@ -123,53 +182,157 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment - Your E-commerce Store</title>
+    <title>VEYRA - Payment</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FFE4E4',
+                        secondary: '#9B8069',
+                    }
+                }
+            }
+        }
+    </script>
 </head>
-<body class="bg-gray-100">
-    <div class="min-h-screen flex items-center justify-center">
-        <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-            <h1 class="text-2xl font-bold mb-6 text-center">Complete Your Purchase</h1>
-            
-            <div class="mb-6 p-4 bg-gray-50 rounded">
-                <h2 class="font-semibold text-lg mb-2">Product Details</h2>
-                <div class="flex justify-between mb-2">
-                    <span>Product:</span>
-                    <span class="font-medium"><?php echo htmlspecialchars($product["title"]); ?></span>
-                </div>
-                <div class="flex justify-between">
-                    <span>Price:</span>
-                    <span class="font-medium">₹<?php echo htmlspecialchars($product["price"]); ?></span>
+<body class="bg-gray-50">
+    <div class="container mx-auto px-4 py-8">
+        <h2 class="text-2xl font-semibold mb-6">Complete Your Order</h2>
+        
+        <div class="lg:flex lg:space-x-8">
+            <!-- Payment Form -->
+            <div class="lg:w-2/3">
+                <div class="bg-white border border-gray-200 rounded-md p-6 mb-6">
+                    <h3 class="text-xl font-semibold mb-4">Payment Details</h3>
+                    
+                    <form id="payment-form" class="space-y-4" method="POST">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                                <input type="text" name="name" required
+                                       class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-secondary/50"
+                                       value="<?= htmlspecialchars($user['name'] ?? '') ?>">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                                <input type="tel" name="phone" required pattern="[0-9]{10}"
+                                       class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-secondary/50"
+                                       value="<?= htmlspecialchars($user['phone'] ?? '') ?>">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Address Line 1</label>
+                            <input type="text" name="address_line1" required
+                                   class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-secondary/50">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Address Line 2 (Optional)</label>
+                            <input type="text" name="address_line2"
+                                   class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-secondary/50">
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">City</label>
+                                <input type="text" name="city" required
+                                       class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-secondary/50">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">State</label>
+                                <input type="text" name="state" required
+                                       class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-secondary/50">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">ZIP Code</label>
+                                <input type="text" name="zipcode" required pattern="[0-9]{6}"
+                                       class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-secondary/50">
+                            </div>
+                        </div>
+
+                        <div class="bg-white border border-gray-200 rounded-md p-6 mt-6">
+                            <h3 class="text-xl font-semibold mb-4">Payment Method</h3>
+                            <div class="space-y-3">
+                                <div class="border border-gray-200 rounded-md p-4">
+                                    <div class="flex items-start">
+                                        <input type="radio" name="payment_method" value="cod" required 
+                                               class="mt-1 mr-3" id="cod">
+                                        <div>
+                                            <label for="cod" class="block font-medium">Cash on Delivery (COD)</label>
+                                            <p class="text-sm text-gray-600">Pay when you receive the order</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="border border-gray-200 rounded-md p-4">
+                                    <div class="flex items-start">
+                                        <input type="radio" name="payment_method" value="upi" required 
+                                               class="mt-1 mr-3" id="upi">
+                                        <div>
+                                            <label for="upi" class="block font-medium">UPI Payment</label>
+                                            <p class="text-sm text-gray-600">Instant payment using UPI</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="text-xs text-red-500"><?= $payment_method_err ?></span>
+                        </div>
+
+                        <button type="submit" 
+                                class="w-full bg-secondary hover:bg-secondary/90 text-white py-3 rounded-md font-medium uppercase tracking-wide">
+                            Complete Payment
+                        </button>
+                    </form>
                 </div>
             </div>
-            
-            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . "?product_id=" . $product_id; ?>" method="post">
-                <div class="mb-4">
-                    <label for="address" class="block text-sm font-medium text-gray-700 mb-1">Shipping Address</label>
-                    <textarea id="address" name="address" rows="3" class="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 <?php echo (!empty($address_err)) ? 'border-red-500' : ''; ?>"><?php echo $address; ?></textarea>
-                    <span class="text-xs text-red-500"><?php echo $address_err; ?></span>
-                </div>
-                
-                <div class="mb-6">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Payment Method</label>
-                    <div class="space-y-2">
-                        <div class="flex items-center">
-                            <input id="cod" name="payment_method" type="radio" value="cod" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300">
-                            <label for="cod" class="ml-2 block text-sm text-gray-700">Cash on Delivery (COD)</label>
+
+            <!-- Order Summary -->
+            <div class="lg:w-1/3 mt-8 lg:mt-0">
+                <div class="bg-white border border-gray-200 rounded-md p-6 sticky top-6">
+                    <h3 class="text-xl font-semibold mb-4">Order Summary</h3>
+                    
+                    <div class="space-y-3 mb-6">
+                        <?php foreach ($order_items as $item): ?>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">
+                                <?= htmlspecialchars($item['title']) ?>
+                                <span class="text-sm">x<?= $item['quantity'] ?></span>
+                            </span>
+                            <span>₹<?= number_format($item['price'] * $item['quantity'], 2) ?></span>
                         </div>
-                        <div class="flex items-center">
-                            <input id="upi" name="payment_method" type="radio" value="upi" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300">
-                            <label for="upi" class="ml-2 block text-sm text-gray-700">UPI Payment</label>
+                        <?php endforeach; ?>
+                        
+                        <div class="border-t pt-3">
+                            <div class="flex justify-between text-gray-600">
+                                <span>Subtotal</span>
+                                <span>₹<?= number_format($bag_total, 2) ?></span>
+                            </div>
+                            
+                            <?php if($coupon_discount > 0): ?>
+                            <div class="flex justify-between text-green-600">
+                                <span>Coupon Discount</span>
+                                <span>-₹<?= number_format($coupon_discount, 2) ?></span>
+                            </div>
+                            <?php endif; ?>
+                            <div class="flex justify-between font-semibold mt-3">
+                                <span>Total</span>
+                                <span>₹<?= number_format($total_amount, 2) ?></span>
+                            </div>
                         </div>
                     </div>
-                    <span class="text-xs text-red-500"><?php echo $payment_method_err; ?></span>
+
+                    <div class="mt-6">
+                        <h4 class="font-medium mb-2">Payment Security</h4>
+                        <div class="flex items-center text-sm text-gray-600">
+                            <i class="fas fa-lock text-green-500 mr-2"></i>
+                            <span>Secure SSL Encryption</span>
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="flex justify-between">
-                    <a href="index.php?page=shop" class="bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded transition-colors">Cancel</a>
-                    <button type="submit" class="bg-indigo-500 hover:bg-indigo-600 text-white py-2 px-4 rounded transition-colors">Continue</button>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
 </body>

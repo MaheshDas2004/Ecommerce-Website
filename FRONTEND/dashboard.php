@@ -7,50 +7,64 @@ $recommendedProducts = [];
 if (isset($_SESSION['user_id'])) {
     $userId = $_SESSION['user_id'];
     
-    // Check if user has any orders
-    $stmt = mysqli_prepare($conn, "SELECT COUNT(*) AS order_count FROM orders WHERE user_id = ?");
-    mysqli_stmt_bind_param($stmt, "i", $userId);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
-    $row = mysqli_fetch_assoc($result);
-    $orderCount = $row['order_count'];
-    mysqli_stmt_close($stmt);
-    
-    if ($orderCount > 0) {
-        $userHasOrders = true;
+    try {
+        // Check if user has any orders using orders table
+        $stmt = $conn->prepare("SELECT COUNT(*) AS order_count FROM orders WHERE user_id = ?");
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        $orderCount = $row['order_count'];
+        $stmt->close();
         
-        // Get latest order's product_id
-        $stmt = mysqli_prepare($conn, "SELECT product_id FROM orders WHERE user_id = ? ORDER BY created_at DESC LIMIT 1");
-        mysqli_stmt_bind_param($stmt, "i", $userId);
-        mysqli_stmt_execute($stmt);
-        $result = mysqli_stmt_get_result($stmt);
-        
-        if (mysqli_num_rows($result) > 0) {
-            $row = mysqli_fetch_assoc($result);
-            $productId = $row['product_id'];
-            mysqli_stmt_close($stmt);
+        if ($orderCount > 0) {
+            $userHasOrders = true;
             
-            // Get product's category
-            $stmt = mysqli_prepare($conn, "SELECT category FROM products WHERE id = ?");
-            mysqli_stmt_bind_param($stmt, "i", $productId);
-            mysqli_stmt_execute($stmt);
-            $result = mysqli_stmt_get_result($stmt);
+            // Get latest order's products through ordered_items
+            $stmt = $conn->prepare("
+                SELECT p.category 
+                FROM ordered_items oi
+                JOIN products p ON oi.product_id = p.id
+                WHERE oi.order_id = (
+                    SELECT order_id FROM orders 
+                    WHERE user_id = ? 
+                    ORDER BY created_at DESC 
+                    LIMIT 1
+                )
+                ORDER BY RAND() 
+                LIMIT 1
+            ");
+            $stmt->bind_param("i", $userId);
+            $stmt->execute();
+            $result = $stmt->get_result();
             
-            if (mysqli_num_rows($result) > 0) {
-                $row = mysqli_fetch_assoc($result);
+            if ($result->num_rows > 0) {
+                $row = $result->fetch_assoc();
                 $category = $row['category'];
-                mysqli_stmt_close($stmt);
+                $stmt->close();
                 
-                // Get recommended products
-                $stmt = mysqli_prepare($conn, "SELECT id, title, price, image, category FROM products WHERE category = ? AND id != ? Order by RAND()LIMIT 4");
-                mysqli_stmt_bind_param($stmt, "si", $category, $productId);
-                mysqli_stmt_execute($stmt);
-                $result = mysqli_stmt_get_result($stmt);
-                $recommendedProducts = mysqli_fetch_all($result, MYSQLI_ASSOC);
-                mysqli_stmt_close($stmt);
+                // Get recommended products excluding previously ordered items
+                $stmt = $conn->prepare("
+                    SELECT p.id, p.title, p.price, p.image 
+                    FROM products p
+                    WHERE p.category = ? 
+                    AND p.id NOT IN (
+                        SELECT product_id FROM ordered_items
+                        JOIN orders ON ordered_items.order_id = orders.order_id
+                        WHERE orders.user_id = ?
+                    )
+                    ORDER BY RAND() 
+                    LIMIT 4
+                ");
+                $stmt->bind_param("si", $category, $userId);
+                $stmt->execute();
+                $recommendedProducts = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+                $stmt->close();
             }
-            shuffle($recommendedProducts);
         }
+    } catch (Exception $e) {
+        error_log("Recommendation error: " . $e->getMessage());
+        $recommendedProducts = []; // Fallback to empty array
     }
 }
 ?>
@@ -77,7 +91,7 @@ if (isset($_SESSION['user_id'])) {
         }
     </style>
 </head>
-<body>
+<body class="">
     <div class="bg-rose-100 p-16 text-center">
         <h1 id="t2" class="text-5xl mb-8 font-sans">New Collections</h1>
         <p class="max-w-2xl mx-auto text-gray-500 px-4">
@@ -299,10 +313,21 @@ if (isset($_SESSION['user_id'])) {
             </div>
         </div>
     </div>
-
-
-    
-
+    <div class="bg-gradient-to-r from-gray-200 to-pink-900 py-16 mb-16">
+        <div class="container mx-auto px-4">
+            <div class="max-w-2xl mx-auto text-center">
+                <h3 class="text-3xl font-bold text-gray-900 mb-4">Join Our Newsletter</h3>
+                <p class="text-gray-700 mb-8">Subscribe to receive updates, access to exclusive deals, and more.</p>
+                <form class="flex flex-col sm:flex-row gap-2 max-w-lg mx-auto">
+                    <input type="email" placeholder="Enter your email address" class="flex-1 px-4 py-3 rounded-lg border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-rose-400 focus:border-transparent">
+                    <button type="submit" class="bg-rose-600 text-white px-6 py-3 rounded-lg hover:bg-rose-700 transition-colors shadow-md font-medium">
+                        Subscribe Now
+                    </button>
+                </form>
+                <p class="text-xs text-gray-600 mt-4">By subscribing, you agree to our Privacy Policy and consent to receive updates from our company.</p>
+            </div>
+        </div>
+    </div>
     <script>
         // Product data
         const products = [

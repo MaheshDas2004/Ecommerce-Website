@@ -1,6 +1,12 @@
 <?php
 session_start();
+include '../Backend/config.php';
+$sql="select count(*) as count from cart_items where cart_id=(select cart_id from cart where user_id='".$_SESSION['user_id']."' and status='active')";
+$result=mysqli_query($conn,$sql);
+$row=mysqli_fetch_assoc($result);
+
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
