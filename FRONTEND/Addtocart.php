@@ -19,7 +19,7 @@ else{
    } else {
        $insert_cart_sql = "INSERT INTO cart (user_id, status) VALUES ('$user_id', 'active')";
        mysqli_query($conn, $insert_cart_sql);
-       $cart_id = mysqli_insert_id($conn); // Get the auto-incremented cart_id
+       $cart_id = mysqli_insert_id($conn); 
    }
    
    $sql = "SELECT cart_item_id, quantity FROM cart_items WHERE cart_id = '$cart_id' AND product_id = '$product_id'";

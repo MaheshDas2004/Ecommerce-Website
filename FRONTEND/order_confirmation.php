@@ -1,17 +1,13 @@
 <?php
-// Initialize the session
 session_start();
 
-// Check if the user is logged in
 if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
     header("location: login.php");
     exit;
 }
 
-// Include config file
 require_once "../Backend/config.php";
 
-// Check if order ID exists in URL
 if (!isset($_GET['order_id']) || empty($_GET['order_id'])) {
     header("location: index.php");
     exit;
@@ -21,7 +17,6 @@ $order_id = trim($_GET['order_id']);
 $user_id = $_SESSION['user_id'];
 
 try {
-    // Get order details
     $sql = "SELECT o.*, 
                    GROUP_CONCAT(p.title SEPARATOR ', ') AS products,
                    SUM(oi.quantity * oi.unit_price) AS total_price 
@@ -55,7 +50,6 @@ try {
     $stmt->close();
 
 } catch (Exception $e) {
-    // Log error and redirect
     error_log("Order confirmation error: " . $e->getMessage());
     header("location: error.php");
     exit;
@@ -118,28 +112,27 @@ $conn->close();
             </div>
 
             <div class="mb-6">
-                    <h2 class="font-semibold text-lg mb-2">Shipping Address</h2>
-                    <?php
-                    // Decode the JSON shipping address
-                    $shipping_address = json_decode($order['shipping_address'], true);
-                    if ($shipping_address && is_array($shipping_address)) :
-                    ?>
-                        <p class="text-gray-700">
-                            <?= htmlspecialchars($shipping_address['name'] ?? '') ?><br>
-                            <?= htmlspecialchars($shipping_address['address_line1'] ?? '') ?><br>
-                            <?php if (!empty($shipping_address['address_line2'])) : ?>
-                                <?= htmlspecialchars($shipping_address['address_line2']) ?><br>
-                            <?php endif; ?>
-                            <?= htmlspecialchars($shipping_address['city'] ?? '') ?>, 
-                            <?= htmlspecialchars($shipping_address['state'] ?? '') ?> - 
-                            <?= htmlspecialchars($shipping_address['zipcode'] ?? '') ?>
-                        </p>
-                    <?php else : ?>
-                        <p class="text-gray-700 whitespace-pre-line">
-                            <?= htmlspecialchars($order['shipping_address']) ?>
-                        </p>
-                    <?php endif; ?>
-                </div>
+                <h2 class="font-semibold text-lg mb-2">Shipping Address</h2>
+                <?php
+                $shipping_address = json_decode($order['shipping_address'], true);
+                if ($shipping_address && is_array($shipping_address)) :
+                ?>
+                    <p class="text-gray-700">
+                        <?= htmlspecialchars($shipping_address['name'] ?? '') ?><br>
+                        <?= htmlspecialchars($shipping_address['address_line1'] ?? '') ?><br>
+                        <?php if (!empty($shipping_address['address_line2'])) : ?>
+                            <?= htmlspecialchars($shipping_address['address_line2']) ?><br>
+                        <?php endif; ?>
+                        <?= htmlspecialchars($shipping_address['city'] ?? '') ?>, 
+                        <?= htmlspecialchars($shipping_address['state'] ?? '') ?> - 
+                        <?= htmlspecialchars($shipping_address['zipcode'] ?? '') ?>
+                    </p>
+                <?php else : ?>
+                    <p class="text-gray-700 whitespace-pre-line">
+                        <?= htmlspecialchars($order['shipping_address']) ?>
+                    </p>
+                <?php endif; ?>
+            </div>
             
             <div class="text-center">
                 <a href="index.php?page=shop" class="inline-block bg-indigo-500 hover:bg-indigo-600 text-white py-2 px-6 rounded transition-colors">

@@ -9,7 +9,7 @@
 <body>
     <?php include 'navbar.php'; ?>
     
-    <div id="content" class="mt-5"> <!-- Add margin-top to account for fixed navbar -->
+    <div id="content" class="mt-5">
         <?php 
         $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
         
@@ -45,6 +45,5 @@
         ?>
     </div>
     <?php include 'footer.php'; ?>
-
 </body>
 </html>

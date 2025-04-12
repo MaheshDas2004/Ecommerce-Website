@@ -5,37 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VEYRA.co - Fashion Blog</title>
     <style>
-        /* Reset and Base Styles */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
         body {
             background-color: #fafafa;
             color: #333;
             line-height: 1.6;
         }
-
         a {
             text-decoration: none;
             color: inherit;
         }
-
         img {
             max-width: 100%;
             height: auto;
         }
-
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
         }
-
-        /* Header Styles */
         header {
             background-color: white;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
@@ -43,36 +36,30 @@
             top: 0;
             z-index: 1000;
         }
-
         .header-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 20px 0;
         }
-
         .logo {
             font-size: 2rem;
             font-weight: bold;
             letter-spacing: 1px;
         }
-
         .logo span {
             font-size: 1rem;
             opacity: 0.8;
             vertical-align: super;
         }
-
         .header-actions {
             display: flex;
             align-items: center;
             gap: 20px;
         }
-
         .cart-icon {
             position: relative;
         }
-
         .cart-count {
             background-color: #333;
             color: white;
@@ -87,36 +74,29 @@
             top: -5px;
             right: -5px;
         }
-
-        /* Hero Section */
         .hero {
             background-color: #fce4e4;
             padding: 60px 0;
             text-align: center;
             margin-bottom: 60px;
         }
-
         .hero h1 {
             font-size: 3rem;
             margin-bottom: 20px;
             color: #222;
         }
-
         .hero p {
             max-width: 700px;
             margin: 0 auto;
             color: #555;
             font-size: 1.1rem;
         }
-
-        /* Features Section */
         .features {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 30px;
             margin-bottom: 60px;
         }
-
         .feature {
             text-align: center;
             padding: 30px 20px;
@@ -125,39 +105,31 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             transition: transform 0.3s;
         }
-
         .feature:hover {
             transform: translateY(-5px);
         }
-
         .feature-icon {
             font-size: 2rem;
             margin-bottom: 20px;
             color: #333;
         }
-
         .feature h3 {
             margin-bottom: 15px;
             font-size: 1.3rem;
         }
-
         .feature p {
             color: #666;
             font-size: 0.95rem;
         }
-
-        /* Blog Posts Section */
         .blog-section {
             margin-bottom: 80px;
         }
-
         .section-title {
             text-align: center;
             margin-bottom: 40px;
             font-size: 2rem;
             position: relative;
         }
-
         .section-title::after {
             content: '';
             display: block;
@@ -166,13 +138,11 @@
             background-color: #fce4e4;
             margin: 15px auto 0;
         }
-
         .blog-posts {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
             gap: 40px;
         }
-
         .blog-post {
             background: white;
             border-radius: 8px;
@@ -180,31 +150,25 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
             transition: transform 0.3s;
         }
-
         .blog-post:hover {
             transform: translateY(-8px);
         }
-
         .blog-image {
             height: 250px;
             overflow: hidden;
         }
-
         .blog-image img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             transition: transform 0.5s;
         }
-
         .blog-post:hover .blog-image img {
             transform: scale(1.05);
         }
-
         .blog-content {
             padding: 25px;
         }
-
         .blog-meta {
             display: flex;
             gap: 15px;
@@ -212,19 +176,16 @@
             font-size: 0.85rem;
             margin-bottom: 10px;
         }
-
         .blog-title {
             font-size: 1.3rem;
             margin-bottom: 12px;
             line-height: 1.4;
         }
-
         .blog-excerpt {
             color: #666;
             margin-bottom: 20px;
             font-size: 0.95rem;
         }
-
         .read-more {
             display: inline-block;
             padding: 8px 0;
@@ -232,7 +193,6 @@
             font-weight: 500;
             position: relative;
         }
-
         .read-more::after {
             content: '';
             position: absolute;
@@ -243,36 +203,29 @@
             background-color: #333;
             transition: width 0.3s;
         }
-
         .blog-post:hover .read-more::after {
             width: 100%;
         }
-
-        /* Newsletter Section */
         .newsletter {
             background-color: #fce4e4;
             padding: 60px 0;
             text-align: center;
             margin-bottom: 60px;
         }
-
         .newsletter h2 {
             font-size: 2rem;
             margin-bottom: 20px;
         }
-
         .newsletter p {
             max-width: 600px;
             margin: 0 auto 30px;
             color: #555;
         }
-
         .newsletter-form {
             display: flex;
             max-width: 500px;
             margin: 0 auto;
         }
-
         .newsletter-form input {
             flex: 1;
             padding: 15px;
@@ -280,7 +233,6 @@
             border-radius: 4px 0 0 4px;
             font-size: 1rem;
         }
-
         .newsletter-form button {
             background-color: #333;
             color: white;
@@ -291,22 +243,17 @@
             font-weight: 500;
             transition: background-color 0.3s;
         }
-
         .newsletter-form button:hover {
             background-color: #222;
         }
-
-        /* Categories Section */
         .categories {
             margin-bottom: 80px;
         }
-
         .category-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 30px;
         }
-
         .category-card {
             position: relative;
             height: 200px;
@@ -314,18 +261,15 @@
             overflow: hidden;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
-
         .category-card img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             transition: transform 0.5s;
         }
-
         .category-card:hover img {
             transform: scale(1.1);
         }
-
         .category-overlay {
             position: absolute;
             top: 0;
@@ -337,72 +281,55 @@
             align-items: flex-end;
             padding: 20px;
         }
-
         .category-title {
             color: white;
             font-size: 1.3rem;
             font-weight: 500;
         }
-
-        
-
-        /* Media Queries */
         @media (max-width: 1024px) {
             .blog-posts {
                 grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             }
         }
-
         @media (max-width: 768px) {
             .hero h1 {
                 font-size: 2.5rem;
             }
-
             .features {
                 grid-template-columns: 1fr;
             }
-
             .blog-posts {
                 grid-template-columns: 1fr;
             }
-
             .newsletter-form {
                 flex-direction: column;
             }
-
             .newsletter-form input,
             .newsletter-form button {
                 width: 100%;
                 border-radius: 4px;
             }
-
             .newsletter-form button {
                 margin-top: 10px;
                 padding: 15px;
             }
         }
-
         @media (max-width: 480px) {
             .header-content {
                 padding: 15px 0;
             }
-
             .logo {
                 font-size: 1.5rem;
             }
-
             .hero h1 {
                 font-size: 2rem;
             }
-
             .hero p {
                 font-size: 1rem;
             }
-
             .section-title {
                 font-size: 1.8rem;
             }
-
             .blog-image {
                 height: 200px;
             }
@@ -410,16 +337,12 @@
     </style>
 </head>
 <body>
-    
-    <!-- Hero Section -->
     <section class="hero">
         <div class="container">
             <h1>Fashion & Lifestyle Blog</h1>
             <p>Discover the latest trends, style tips, and fashion inspiration. From runway to everyday wear, we've got you covered with expert advice and curated collections.</p>
         </div>
     </section>
-
-    <!-- Features Section -->
     <section class="container features">
         <div class="feature">
             <div class="feature-icon">
@@ -465,15 +388,12 @@
             <p>Stay ahead with our data-driven insights on upcoming fashion and lifestyle trends.</p>
         </div>
     </section>
-
-    <!-- Blog Posts Section -->
     <section class="container blog-section">
         <h2 class="section-title">Latest Articles</h2>
         <div class="blog-posts">
             <div class="blog-post">
                 <div class="blog-image">
                     <img src="https://images.unsplash.com/photo-1557776639-0208033c9112?q=80&w=3087&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Fashion Week Highlights">
-                    
                 </div>
                 <div class="blog-content">
                     <div class="blog-meta">
@@ -485,7 +405,6 @@
                     <a href="#" class="read-more">Read More</a>
                 </div>
             </div>
-            
             <div class="blog-post">
                 <div class="blog-image">
                     <img src="https://plus.unsplash.com/premium_photo-1713586580802-854a58542159?q=80&w=3087&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Sustainable Fashion">
@@ -500,7 +419,6 @@
                     <a href="#" class="read-more">Read More</a>
                 </div>
             </div>
-            
             <div class="blog-post">
                 <div class="blog-image">
                     <img src="https://images.unsplash.com/photo-1511556820780-d912e42b4980?q=80&w=3087&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Accessory Trends">
@@ -517,8 +435,6 @@
             </div>
         </div>
     </section>
-
-    <!-- Newsletter Section -->
     <section class="newsletter">
         <div class="container">
             <h2>Subscribe to Our Newsletter</h2>
@@ -529,8 +445,6 @@
             </form>
         </div>
     </section>
-
-    <!-- Categories Section -->
     <section class="container categories">
         <h2 class="section-title">Explore Categories</h2>
         <div class="category-grid">
@@ -560,18 +474,11 @@
             </div>
         </div>
     </section>
-
-    <!-- Footer -->
-    
-
     <script>
-        // Newsletter Form Submission
         const newsletterForm = document.querySelector('.newsletter-form');
-        
         newsletterForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const email = newsletterForm.querySelector('input').value;
-            
             if (email) {
                 alert('Thank you for subscribing! You will receive our newsletter soon.');
                 newsletterForm.reset();

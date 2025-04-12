@@ -5,7 +5,6 @@
         
         include '../Backend/config.php';
     
-        // First get the stored hashed password
         $sql = "SELECT * FROM users WHERE Email = ?";
         $stmt = mysqli_prepare($conn, $sql);
         mysqli_stmt_bind_param($stmt, "s", $email);
@@ -14,7 +13,6 @@
 
         if(mysqli_num_rows($result) == 1) {
             $user = mysqli_fetch_assoc($result);
-            // Verify the password against the stored hash
             if(password_verify($Password, $user['password'])) {
                 session_start();
                 $user_id = $user['Sno'];
@@ -23,7 +21,6 @@
                 $_SESSION['loggedin'] = true;
                 $_SESSION['email'] = $email;
                 $_SESSION['user_id'] = $user_id;
-                // Don't store the password in session
                 header("location: index.php");
                 exit();
             } else {
