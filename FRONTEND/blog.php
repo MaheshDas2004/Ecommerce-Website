@@ -484,34 +484,7 @@
     </style>
 </head>
 <body>
-    <!-- Header (without navbar) -->
-    <header>
-        <div class="container">
-            <div class="header-content">
-                <div class="logo">
-                    VEYRA<span>.co</span>
-                </div>
-                <div class="header-actions">
-                    
-                    <a href="#" class="cart-icon">
-                        
-                            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-                            <line x1="3" y1="6" x2="21" y2="6"></line>
-                            <path d="M16 10a4 4 0 0 1-8 0"></path>
-                        </svg>
-                        
-                    </a>
-                    <a href="#">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="11" cy="11" r="8"></circle>
-                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                        </svg>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </header>
-
+    
     <!-- Hero Section -->
     <section class="hero">
         <div class="container">
