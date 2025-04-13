@@ -1,9 +1,13 @@
 <?php
 session_start();
 include '../Backend/config.php';
-$sql = "SELECT COUNT(*) as count FROM cart_items WHERE cart_id = (SELECT cart_id FROM cart WHERE user_id = '" . $_SESSION['user_id'] . "' AND status = 'active')";
-$result = mysqli_query($conn, $sql);
-$row = mysqli_fetch_assoc($result);
+if (isset($_SESSION['user_id'])) {
+    $sql = "SELECT COUNT(*) as count FROM cart_items WHERE cart_id = (SELECT cart_id FROM cart WHERE user_id = '" . $_SESSION['user_id'] . "' AND status = 'active')";
+    $result = mysqli_query($conn, $sql);
+    $row = mysqli_fetch_assoc($result);
+} else {
+    $row = ['count' => 0];
+}
 ?>
 
 <!DOCTYPE html>
