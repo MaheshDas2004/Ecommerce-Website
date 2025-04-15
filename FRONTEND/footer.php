@@ -12,7 +12,7 @@
     footer {
             background-color: #333;
             color: white;
-            padding: 60px 0 30px;
+            padding: 60px 90px;
         }
 
         .footer-content {

@@ -332,7 +332,7 @@ if (isset($_SESSION['user_id'])) {
         // Product data
         const products = [
             {
-                id: 1,
+                id:1,
                 name: "DARK FLORISH ONEPIECE",
                 price: 250.00,
                 image: "https://images.unsplash.com/photo-1621184455862-c163dfb30e0f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",

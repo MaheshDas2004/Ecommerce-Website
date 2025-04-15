@@ -2,7 +2,6 @@
 session_start();
 include '../Backend/config.php';
 
-
 ?>
 
 <!DOCTYPE html>
@@ -78,7 +77,13 @@ include '../Backend/config.php';
                         mysqli_stmt_execute($stmt);
                         mysqli_stmt_bind_result($stmt, $name);
                         if (mysqli_stmt_fetch($stmt)) {
-                            echo " $name";
+                            $initial="";
+                            $word=explode(" ", $name);
+                            foreach($word as $w) {
+                                $initial .= $w[0];
+                            }
+                            echo " " . $initial;
+
                         } else {
                             echo " User";
                         }
@@ -118,10 +123,10 @@ include '../Backend/config.php';
         </div>
         <div id="mobile-menu" class="hidden absolute top-16 left-0 right-0 bg-white shadow-md w-full md:hidden z-50">
             <nav class="flex flex-col py-3">
-                <a href="#" class="text-gray-700 hover:text-black py-2 px-4">HOME</a>
-                <a href="#" class="text-gray-700 hover:text-black py-2 px-4">SHOP</a>
-                <a href="#" class="text-gray-700 hover:text-black py-2 px-4">BLOG</a>
-                <a href="#" class="text-gray-700 hover:text-black py-2 px-4">CONTACT</a>
+                <a href="index.php" class="text-gray-700 hover:text-black py-2 px-4">HOME</a>
+                <a href="index.php?page=shop" class="text-gray-700 hover:text-black py-2 px-4">SHOP</a>
+                <a href="index.php?page=blog" class="text-gray-700 hover:text-black py-2 px-4">BLOG</a>
+                <a href="index.php?page=contact" class="text-gray-700 hover:text-black py-2 px-4">CONTACT</a>
             </nav>
         </div>
     </div>
