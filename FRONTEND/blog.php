@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VEYRA.co - Fashion Blog</title>
+    <link rel="stylesheet" href="./output.css">
     <style>
         /* Reset and Base Styles */
         * {
@@ -519,17 +520,21 @@
     </section>
 
     <!-- Newsletter Section -->
-    <section class="newsletter">
-        <div class="container">
-            <h2>Subscribe to Our Newsletter</h2>
-            <p>Stay updated with our latest fashion insights, exclusive content, and special offers delivered straight to your inbox.</p>
-            <form class="newsletter-form">
-                <input type="email" placeholder="Your email address" required>
-                <button type="submit">Subscribe</button>
-            </form>
+    <div class="bg-gradient-to-r from-gray-200 to-pink-900 py-16 mb-16">
+        <div class="container mx-auto px-4">
+            <div class="max-w-2xl mx-auto text-center">
+                <h3 class="text-3xl font-bold text-gray-900 mb-4">Join Our Newsletter</h3>
+                <p class="text-gray-700 mb-8">Subscribe to receive updates, access to exclusive deals, and more.</p>
+                <form class="flex flex-col sm:flex-row gap-2 max-w-lg mx-auto">
+                    <input type="email" placeholder="Enter your email address" class="flex-1 px-4 py-3 rounded-lg border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-rose-400 focus:border-transparent">
+                    <button type="submit" class="bg-rose-600 text-white px-6 py-3 rounded-lg hover:bg-rose-700 transition-colors shadow-md font-medium">
+                        Subscribe Now
+                    </button>
+                </form>
+                <p class="text-xs text-gray-600 mt-4">By subscribing, you agree to our Privacy Policy and consent to receive updates from our company.</p>
+            </div>
         </div>
-    </section>
-
+    </div>
     <!-- Categories Section -->
     <section class="container categories">
         <h2 class="section-title">Explore Categories</h2>

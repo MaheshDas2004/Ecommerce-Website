@@ -1,9 +1,7 @@
 <?php
 session_start();
 include '../Backend/config.php';
-$sql="select count(*) as count from cart_items where cart_id=(select cart_id from cart where user_id='".$_SESSION['user_id']."' and status='active')";
-$result=mysqli_query($conn,$sql);
-$row=mysqli_fetch_assoc($result);
+
 
 ?>
 
@@ -117,14 +115,14 @@ $row=mysqli_fetch_assoc($result);
                     echo '<a href="index.php?page=cart" class="text-gray-700 hover:text-black flex text-xl items-center" aria-label="Cart">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                    </svg>(0)';
+                    </svg>';
                     echo'</a>';
                 }
                 else{
                     echo '<a href="Login.php" class="text-gray-700 hover:text-black flex text-xl items-center" aria-label="Cart">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                    </svg>(0)';
+                    </svg>';
                     echo'</a>';
 
                 }

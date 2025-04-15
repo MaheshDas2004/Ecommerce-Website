@@ -107,7 +107,7 @@
                     </div>
                 </div>
                 <div class="md:w-1/2 flex justify-center">
-                    <img src="./images/hero-fashion.png" alt="Fashion Collection" class="max-w-full h-auto rounded-lg shadow-xl">
+                    <!-- <img src="./images/hero-fashion.png" alt="Fashion Collection" class="max-w-full h-auto rounded-lg shadow-xl"> -->
                 </div>
             </div>
         </div>

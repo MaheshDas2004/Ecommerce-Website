@@ -38,6 +38,6 @@ else{
    $update_cart_sql = "UPDATE cart SET updated_at = CURRENT_TIMESTAMP WHERE cart_id = '$cart_id'";
    mysqli_query($conn, $update_cart_sql);
    
-   header("Location: ../Frontend/index.php?page=cart&success=Product added to cart successfully!");
+   header("Location: index.php?page=cart&success=Product added to cart successfully!");
 }
 ?>
