@@ -8,7 +8,7 @@
 
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap');
-    /* Footer */
+
     footer {
             background-color: #333;
             color: white;

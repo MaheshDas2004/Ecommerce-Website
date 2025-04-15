@@ -6,7 +6,6 @@ if(!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 } else {
     $user_id = $_SESSION['user_id'];
     
-    // Get active cart for this user
     $cart_sql = "SELECT cart_id FROM cart WHERE user_id = '$user_id' AND status = 'active'";
     $cart_result = mysqli_query($conn, $cart_sql);
     
@@ -17,7 +16,6 @@ if(!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
         $cart_row = mysqli_fetch_assoc($cart_result);
         $cart_id = $cart_row['cart_id'];
         
-        // Get cart items with product details
         $items_sql = "
             SELECT ci.cart_item_id as id, ci.product_id, ci.quantity, p.title, p.price, p.image 
             FROM cart_items ci
@@ -28,12 +26,10 @@ if(!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
         $cart_items = mysqli_fetch_all($items_result, MYSQLI_ASSOC);
     }
     
-    // Get all active coupons from database
     $coupon_query = "SELECT * FROM coupons ORDER BY amount DESC";
     $coupon_result = mysqli_query($conn, $coupon_query);
     $coupons = mysqli_fetch_all($coupon_result, MYSQLI_ASSOC);
     
-    // Calculate cart totals
     $bag_total = 0;
     $total_items = 0;
     
@@ -42,16 +38,13 @@ if(!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
         $total_items += $item['quantity'];
     }
     
-    // No bag discount calculation since there's no original_price
     $coupon_discount = 0;
     $coupon_message = '';
     $applied_coupon = null;
     
-    // Process coupon code if submitted
     if(isset($_POST['apply_coupon']) && !empty($_POST['coupon_code'])) {
         $coupon_code = mysqli_real_escape_string($conn, $_POST['coupon_code']);
         
-        // Check if coupon exists and is valid
         $stmt = $conn->prepare("SELECT * FROM coupons WHERE code = ?");
         $stmt->bind_param("s", $coupon_code);
         $stmt->execute();
@@ -60,17 +53,13 @@ if(!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
         if($result->num_rows > 0) {
             $coupon = $result->fetch_assoc();
             
-            // Check minimum purchase requirement
             if($bag_total >= $coupon['min_purchase']) {
                 if($coupon['is_percentage'] == 1) {
-                    // Percentage discount
                     $coupon_discount = $bag_total * ($coupon['amount'] / 100);
                 } else {
-                    // Fixed amount discount
                     $coupon_discount = $coupon['amount'];
                 }
                 
-                // Make sure discount doesn't exceed cart total
                 if($coupon_discount > $bag_total) {
                     $coupon_discount = $bag_total;
                 }
@@ -78,7 +67,6 @@ if(!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
                 $coupon_message = "<div class='text-green-600'>Coupon applied: {$coupon['description']}</div>";
                 $applied_coupon = $coupon;
                 
-                // Store coupon in session for checkout
                 $_SESSION['applied_coupon'] = $coupon['code'];
                 $_SESSION['discount_amount'] = $coupon_discount;
             } else {
@@ -89,7 +77,6 @@ if(!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
         }
     }
     
-    // Calculate final total after coupon discount
     $order_total = $bag_total - $coupon_discount;
 }
 ?>
@@ -116,11 +103,9 @@ if(!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 </head>
 <body class="bg-gray-50">
     
-    <!-- Cart Container -->
     <div class="container mx-auto px-4 py-8">
         <h2 class="text-2xl font-semibold mb-6">My Bag <span id="itemCount" class="text-gray-500 font-normal text-lg">(<?php echo $total_items; ?> item<?php echo $total_items !== 1 ? 's' : ''; ?>)</span></h2>
         
-        <!-- Display success/error messages -->
         <?php if(isset($_GET['success'])): ?>
             <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
                 <?php echo htmlspecialchars($_GET['success']); ?>
@@ -134,7 +119,6 @@ if(!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
         <?php endif; ?>
         
         <div class="lg:flex lg:space-x-8">
-            <!-- Cart Items -->
             <div class="lg:w-2/3">
                 <?php if(empty($cart_items)): ?>
                     <div class="border border-gray-200 rounded-md mb-4 p-6 text-center">
@@ -183,8 +167,6 @@ if(!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
                         </div>
                     <?php endforeach; ?>
                 <?php endif; ?>
-                
-                
             </div>
             
             <div class="lg:w-1/3 mt-8 lg:mt-0">
@@ -220,7 +202,6 @@ if(!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
                     </div>
                     
                     <form action="payment.php">
-                        <!-- Pass the coupon info to the shipping page if applied -->
                         <?php if(isset($applied_coupon)): ?>
                             <input type="hidden" name="applied_coupon" value="<?php echo $applied_coupon['code']; ?>">
                             <input type="hidden" name="coupon_discount" value="<?php echo $coupon_discount; ?>">
@@ -235,7 +216,6 @@ if(!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
                         </button>
                     </form>
                     
-                    <!-- Coupon Section -->
                     <div class="mt-6 border border-gray-200 rounded-md p-4">
                         <h4 class="font-medium mb-3">Apply Coupon</h4>
                         <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post" class="flex">
@@ -274,7 +254,6 @@ if(!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
                         <?php endif; ?>
                     </div>
                     
-                    <!-- Return Policy -->
                     <div class="mt-6">
                         <h4 class="font-medium mb-2">Return/Refund policy</h4>
                         <p class="text-sm text-gray-600">In case of return, we ensure quick refunds. Full amount will be refunded excluding Convenience Fee.</p>
@@ -285,7 +264,6 @@ if(!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
         </div>
     </div>
     
-    <!-- Trust Badges -->
     <div class="container mx-auto px-4 py-6 border-t border-gray-200 mt-8">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
             <div class="flex flex-col items-center">
@@ -319,7 +297,6 @@ if(!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     </div>
 
     <script>
-        // Script to copy coupon code to input when radio button is clicked
         document.addEventListener('DOMContentLoaded', function() {
             const couponRadios = document.querySelectorAll('.coupon-radio');
             const couponInput = document.getElementById('couponInput');
@@ -328,7 +305,6 @@ if(!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
                 radio.addEventListener('change', function() {
                     if (this.checked) {
                         couponInput.value = this.dataset.code;
-                        // Auto-submit the form when a coupon is selected
                         this.closest('form').submit();
                     }
                 });

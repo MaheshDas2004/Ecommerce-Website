@@ -11,19 +11,16 @@ $address = $payment_method = "";
 $address_err = $payment_method_err = "";
 $order_source = isset($_GET['source']) ? $_GET['source'] : 'direct';
 
-// Validate order source
 if (!in_array($order_source, ['cart', 'direct'])) {
     header("location: error.php");
     exit;
 }
 
-// Initialize variables
 $order_items = [];
 $total_amount = 0;
 $bag_total = 0;
 
 if ($order_source === 'direct') {
-    // Handle direct product purchase
     if (!isset($_GET["product_id"])) {
         header("location: index.php?page=shop&error=Product ID is required.");
         exit;
@@ -32,7 +29,6 @@ if ($order_source === 'direct') {
     $product_id = trim($_GET["product_id"]);
     $quantity = isset($_GET["quantity"]) ? (int)$_GET["quantity"] : 1;
 
-    // Get product details
     $sql = "SELECT * FROM products WHERE id = ?";
     if ($stmt = $conn->prepare($sql)) {
         $stmt->bind_param("i", $product_id);
@@ -56,7 +52,6 @@ if ($order_source === 'direct') {
         $total_amount = $bag_total;
     }
 } else {
-    // Handle cart-based purchase
     $sql = "SELECT ci.*, p.title, p.price 
     FROM cart_items ci
     JOIN cart c ON ci.cart_id = c.cart_id
@@ -82,12 +77,10 @@ if ($order_source === 'direct') {
     }
 }
 
-// Handle coupon and shipping from session
 $coupon_discount = $_SESSION['discount_amount'] ?? 0;
 $total_amount = $bag_total - $coupon_discount;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Validate inputs
     $address = [
         'name' => trim($_POST['name']),
         'phone' => trim($_POST['phone']),
@@ -100,7 +93,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     $payment_method = $_POST['payment_method'] ?? '';
 
-    // Validate required fields
     if (empty($address['name'])) $address_err = "Full name is required";
     if (empty($address['phone'])) $address_err = "Phone number is required";
     if (empty($address['line1'])) $address_err = "Address line 1 is required";
@@ -112,7 +104,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty($address_err) && empty($payment_method_err)) {
         $conn->begin_transaction();
         try {
-            // Insert into orders table
             $sql = "INSERT INTO orders (user_id, total_amount,payment_status,payment_method,order_status,shipping_address)
                     VALUES ( ?, ?, 'pending', ?,'processing', ?)";
             
@@ -128,7 +119,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $order_id = $conn->insert_id;
             $stmt->close();
 
-            // Insert into ordered_items
             foreach ($order_items as $item) {
                 $sql = "INSERT INTO ordered_items (order_id, product_id, quantity, unit_price)
                         VALUES (?, ?, ?, ?)";
@@ -138,7 +128,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $stmt->close();
             }
 
-            // Clear cart if cart-based order
             if ($order_source === 'cart') {
                 $sql = "DELETE ci
                 FROM cart_items ci
@@ -153,7 +142,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             $conn->commit();
 
-            // Redirect based on payment method
             if ($payment_method == "cod") {
                 header("Location: order_confirmation.php?order_id=" . $order_id);
             } else {
@@ -168,7 +156,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-// Get user details
 $user_sql = "SELECT * FROM users WHERE Sno = ?";
 $stmt = $conn->prepare($user_sql);
 $stmt->bind_param("i", $_SESSION['user_id']);
@@ -203,7 +190,6 @@ $stmt->close();
         <h2 class="text-2xl font-semibold mb-6">Complete Your Order</h2>
         
         <div class="lg:flex lg:space-x-8">
-            <!-- Payment Form -->
             <div class="lg:w-2/3">
                 <div class="bg-white border border-gray-200 rounded-md p-6 mb-6">
                     <h3 class="text-xl font-semibold mb-4">Payment Details</h3>
@@ -289,7 +275,6 @@ $stmt->close();
                 </div>
             </div>
 
-            <!-- Order Summary -->
             <div class="lg:w-1/3 mt-8 lg:mt-0">
                 <div class="bg-white border border-gray-200 rounded-md p-6 sticky top-6">
                     <h3 class="text-xl font-semibold mb-4">Order Summary</h3>
