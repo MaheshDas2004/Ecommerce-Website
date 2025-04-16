@@ -4,13 +4,79 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VEYRA-contactpage</title>
+    <style>
+        /* Popup styling */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            text-align: center;
+        }
+        
+        .popup-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .popup-icon {
+            color: #10B981;
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+        
+        .popup h2 {
+            color: #333;
+            margin: 10px 0;
+        }
+        
+        .popup p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .popup-close {
+            background-color: #EC4899;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        
+        .popup-close:hover {
+            background-color: #DB2777;
+        }
+        
+        /* Overlay background */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+    </style>
 </head>
 <body>
 <section class="text-gray-600 body-font relative">
   <div class="container px-5 py-24 mx-auto">
     <div class="flex flex-col text-center w-full mb-12">
       <h1 class="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">Contact Us</h1>
-      <p class="lg:w-2/3 mx-auto leading-relaxed text-base">Whatever cardigan tote bag tumblr hexagon brooklyn asymmetrical gentrify.</p>
+      <p class="lg:w-2/3 mx-auto leading-relaxed text-base"></p>
     </div>
     <div class="lg:w-1/2 md:w-2/3 mx-auto">
       <div class="flex flex-wrap -m-2">
@@ -33,7 +99,7 @@
           </div>
         </div>
         <div class="p-2 w-full">
-          <button class="flex mx-auto text-white bg-pink-500 border-0 py-2 px-8 focus:outline-none hover:bg-pink-600 rounded text-lg">Button</button>
+          <button id="submitBtn" class="flex mx-auto text-white bg-pink-500 border-0 py-2 px-8 focus:outline-none hover:bg-pink-600 rounded text-lg">Submit</button>
         </div>
         <div class="p-2 w-full pt-8 mt-8 border-t border-gray-200 text-center">
           <a class="text-pink-500">example@email.com</a>
@@ -68,5 +134,52 @@
     </div>
   </div>
 </section>
+
+<!-- Popup overlay -->
+<div id="overlay" class="overlay"></div>
+
+<!-- Popup notification -->
+<div id="popup" class="popup">
+  <div class="popup-content">
+    <div class="popup-icon">✓</div>
+    <h2>Message Sent!</h2>
+    <p>Thank you for contacting us. We'll get back to you soon.</p>
+    <button id="closePopup" class="popup-close">Close</button>
+  </div>
+</div>
+
+<script>
+  // Get elements
+  const submitBtn = document.getElementById('submitBtn');
+  const popup = document.getElementById('popup');
+  const overlay = document.getElementById('overlay');
+  const closePopup = document.getElementById('closePopup');
+  
+  // Show popup when submit button is clicked
+  submitBtn.addEventListener('click', function(e) {
+    e.preventDefault(); // Prevent form submission
+    
+    // Show popup and overlay
+    popup.style.display = 'block';
+    overlay.style.display = 'block';
+    
+    // Optional: Reset form
+    document.getElementById('name').value = '';
+    document.getElementById('email').value = '';
+    document.getElementById('message').value = '';
+  });
+  
+  // Close popup when close button is clicked
+  closePopup.addEventListener('click', function() {
+    popup.style.display = 'none';
+    overlay.style.display = 'none';
+  });
+  
+  // Close popup when clicking outside of it
+  overlay.addEventListener('click', function() {
+    popup.style.display = 'none';
+    overlay.style.display = 'none';
+  });
+</script>
 </body>
 </html>
