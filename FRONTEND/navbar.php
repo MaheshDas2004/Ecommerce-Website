@@ -31,22 +31,22 @@ include '../Backend/config.php';
             </svg>
         </button>
         <nav class="hidden md:flex items-center space-x-4 lg:space-x-6">
-            <div class="group relative">
+            <div class="">
                 <a href="index.php" class="text-gray-700 hover:text-black flex items-center">
                     HOME <i class="text-xs ml-1"></i>
                 </a>
             </div>
-            <div class="group relative">
+            <div class="">
                 <a href="index.php?page=shop" class="text-gray-700 hover:text-black flex items-center">
                     SHOP <i class="text-xs ml-1"></i>
                 </a>
             </div>
-            <div class="group relative">
+            <div class="">
                 <a href="index.php?page=blog" class="text-gray-700 hover:text-black flex items-center">
                     BLOG <i class="text-xs ml-1"></i>
                 </a>
             </div>
-            <div class="group relative">
+            <div class="">
                 <a href="index.php?page=contact" class="text-gray-700 hover:text-black flex items-center">
                     CONTACT <i class="text-xs ml-1"></i>
                 </a>

@@ -92,7 +92,7 @@ if (isset($_SESSION['user_id'])) {
     </style>
 </head>
 <body class="">
-    <div class="bg-rose-100 p-16 text-center">
+    <div class="bg-rose-100 p-16 mt-20 text-center">
         <h1 id="t2" class="text-5xl mb-8 font-sans">New Collections</h1>
         <p class="max-w-2xl mx-auto text-gray-500 px-4">
             Discover the latest trends in our new collection. From stylish apparel to must-have accessories, find everything you need to elevate your wardrobe. Shop now and redefine your style with our exclusive range!

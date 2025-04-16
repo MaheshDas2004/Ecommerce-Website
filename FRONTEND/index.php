@@ -6,10 +6,10 @@
     <title>VEYRA</title>
     <link rel="stylesheet" href="./output.css">
 </head>
-<body>
+<body class="">
     <?php include 'navbar.php'; ?>
     
-    <div id="content" class="mt-5">
+    <div id="content" class="mt-20">
         <?php 
         $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
         

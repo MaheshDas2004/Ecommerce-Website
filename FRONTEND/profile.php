@@ -99,7 +99,9 @@ $stmt->close();
                 <!-- Recent Orders Card -->
                 <div class="bg-white rounded-lg shadow-md p-8 mb-8 sm:p-5">
                     <h3 class="text-xl font-semibold mb-5 text-black relative pb-3 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-12 after:h-0.5 after:bg-soft-pink">Recent Orders</h3>
-                    
+                    <?php if (empty($orders)): ?>
+                        <p class="text-gray-600">No recent orders found.</p>
+                    <?php else: ?>
                     <table class="w-full border-collapse">
                         <thead>
                             <tr>
@@ -139,6 +141,7 @@ $stmt->close();
                             <?php endforeach; ?>
                         </tbody>
                     </table>
+                    <?php endif; ?>
                 </div>
             </main>
         </div>
