@@ -229,7 +229,7 @@ if (isset($_SESSION['user_id'])) {
                         class="w-full transition-transform duration-500 group-hover:scale-95"
                         >
                     </div>
-                    <p class="uppercase text-gray-500 tracking-wider text-sm md:text-base font-bold">Shop for women</p>
+                    <p class="uppercase text-gray-500 tracking-wider text-sm md:text-base ">Shop for women</p>
                 </a>
             </div>
         
@@ -332,42 +332,42 @@ if (isset($_SESSION['user_id'])) {
         // Product data
         const products = [
             {
-                id:1,
+                id:26,
                 name: "DARK FLORISH ONEPIECE",
                 price: 250.00,
                 image: "https://images.unsplash.com/photo-1621184455862-c163dfb30e0f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
                 category: "women"
             },
             {
-                id: 2,
+                id: 27,
                 name: "BAGGY SHIRT",
                 price: 55.00,
                 image: "https://images.unsplash.com/photo-1618244972963-dbee1a7edc95?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
                 category: "men"
             },
             {
-                id: 3,
+                id: 28,
                 name: "COTTON OFF-WHITE SHIRT",
                 price: 65.00,
                 image: "https://images.unsplash.com/photo-1622445275576-721325763afe?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
                 category: "men"
             },
             {
-                id: 4,
+                id: 29,
                 name: "CROP SWEATER",
                 price: 50.00,
                 image: "https://images.unsplash.com/photo-1519058082700-08a0b56da9b4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
                 category: "women"
             },
             {
-                id: 5,
+                id: 30,
                 name: "SUMMER DRESS",
                 price: 75.00,
                 image: "https://images.unsplash.com/photo-1583846783214-7229a91b20ed?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
                 category: "women"
             },
             {
-                id: 6,
+                id: 31,
                 name: "CASUAL BLAZER",
                 price: 95.00,
                 image: "https://images.unsplash.com/photo-1611312449408-fcece27cdbb7?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
@@ -394,8 +394,8 @@ if (isset($_SESSION['user_id'])) {
                         class="w-full h-96 object-cover mb-4">
                     
                         <h3 class="text-lg font-medium text-gray-900">${product.name}</h3>
-                        <div class="mt-2 mb-3">
-                            <span class="text-gray-700">${product.price ? '$' + product.price.toFixed(2) : 'Contact for price'}</span>
+                        <div class="mt-2 mb-3 font-bold">
+                            <span class="text-gray-700">${product.price ? '₹' + product.price.toFixed(2) : 'Contact for price'}</span>
                         </div>
                         <div class="flex space-x-2">
                         <form action="Payment.php" class="w-full"">
